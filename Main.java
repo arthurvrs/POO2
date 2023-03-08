@@ -98,10 +98,10 @@ public class Main {
                     biblioteca.listarLivros();
                     break;
                 case "4":
-                    biblioteca.listarUsuarios();
+                    biblioteca.listarConta(usuario);
                     break;
                 case "5":
-                    biblioteca.listarAdmins();
+                    biblioteca.listarConta();
                     break;
                 case "6":
                     buscarLivro();
@@ -205,7 +205,7 @@ public class Main {
                 if (usuario.senha.equals(senha)){
                     return usuario;
                 }
-
+                
                 return null;
             }
         }
@@ -381,6 +381,13 @@ public class Main {
 
     private static void reservar()
     {
+        for(Livro l: usuario.livrosAlugados) {
+            if(l.checkarAtraso()) {
+                System.out.println("Devido a existencia de livros atrasados, esta função está indisponivel!");
+                return;
+            }
+        }
+        
         System.out.print("Digite o titulo do livro: ");
         String titulo = input.nextLine();
         
@@ -456,5 +463,3 @@ public class Main {
         }
     }
 }
-
-

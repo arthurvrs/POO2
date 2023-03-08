@@ -19,9 +19,13 @@ public class Biblioteca {
         }
     } 
 
-    public void listarUsuarios() {
+    public void listarConta(Usuario u) {
         for (Usuario usuario : this.usuarios) {
-            usuario.listarLivrosAlugados();
+            
+            if(!(usuario instanceof Admin))
+            {
+                usuario.listarLivrosAlugados();
+            }
         }
     }
 
@@ -77,9 +81,14 @@ public class Biblioteca {
         this.usuarios.add(novoUsuario);
     }
 
-    public void listarAdmins() {
+    public void listarConta() {
         for (Usuario usuario : this.usuarios)
-            System.out.println(usuario.username + " Contato: " + usuario.contato);
+        {
+            if(usuario instanceof Admin)
+            {
+                System.out.println(usuario.username + " Contato: " + usuario.contato);
+            }
+        }
     }
 
     Livro buscarLivro(String titulo) {
