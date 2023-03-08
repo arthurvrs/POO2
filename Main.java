@@ -6,37 +6,36 @@ import java.util.Scanner;
 public class Main {
     static Biblioteca biblioteca;
     static Scanner input;
-    static Usuario usuario;
+    static Cliente cliente;
+    static Admin admin;
     static boolean isAdmin = false;
 
     public static void main(String[] args) {
         biblioteca = new Biblioteca();
         input = new Scanner(System.in);
 
-        biblioteca.usuarios.add(new Admin("admin", "admin", "admin@admin.com"));
+        biblioteca.admins.add(new Admin("admin", "admin", "admin@admin.com"));
 
         do {
             loginMenu();
 
-            if (usuario != null) {
-                if (usuario instanceof Admin) {
-                    adminMenu();
-                }
-                else {
-                    usuarioMenu();
-                }
+            if (cliente != null ) {
+                usuarioMenu();
             }
-        } while (usuario != null);
+            if (admin != null) {
+                adminMenu();
+            }
+        } while (cliente != null || admin != null);
 
         System.out.println("\n                           ATÉ A PRÓXIMA!");
         input.close();
     }
 
     private static void loginMenu() {
-        usuario = null;
+        boolean conseguiuLogar = false;
         
         loginLoop:
-        while (usuario == null) {
+        while (!conseguiuLogar) {
             System.out.println("--------------------------- SEJA BEM-VINDO ---------------------------\n");
             System.out.println("                                MENU\n");
             System.out.println("1 - Logar");
@@ -49,12 +48,18 @@ public class Main {
 
             switch (opcao) {
                 case "1":
-                    usuario = tentarLogar();
+                    conseguiuLogar = tentarLogar();
 
-                    if (usuario == null)
+                    if (!conseguiuLogar)
                         System.out.println("\n\nUsuario ou senha invalidos! Tente novamente");
+                    else if (cliente != null)
+                        System.out.println("Usuario " + cliente.username + " logado com sucesso!");
                     else
-                        System.out.println("Usuario " + usuario.username + " logado com sucesso!");
+                    {
+                        System.out.println("Usuario " + admin.username + " logado com sucesso!");
+                        admin.baterPontoEntrada();
+                    }
+
                     break;
                 case "2":
                     cadastrarUsuario();
@@ -81,7 +86,10 @@ public class Main {
             System.out.println("7  - Listar Livros Alugados");
             System.out.println("8  - Listar Livros Atrasados");
             System.out.println("9  - Remover Review");
-            System.out.println("10 - Sair");
+            System.out.println("10 - Alterar Senha");
+            System.out.println("11 - Alterar Contato");
+            System.out.println("12 - Ver Horas Trabalhadas");
+            System.out.println("13 - Sair");
             System.out.print("Digite o que deseja fazer: ");
 
             String opcao = input.nextLine();
@@ -98,7 +106,7 @@ public class Main {
                     biblioteca.listarLivros();
                     break;
                 case "4":
-                    biblioteca.listarConta(usuario);
+                    biblioteca.listarClientes();
                     break;
                 case "5":
                     biblioteca.listarConta();
@@ -116,6 +124,16 @@ public class Main {
                     removerReview();
                     break;
                 case "10":
+                    alterarSenha(admin);
+                    break;
+                case "11":
+                    alterarContato(admin);
+                    break;
+                case "12":
+                    System.out.println(admin.horasTrabalhadas);
+                    break;
+                case "13":
+                    admin.baterPontoSaida();
                     break menu;
                 default:
                     System.out.println("Opcao invalida!");
@@ -136,7 +154,9 @@ public class Main {
             System.out.println("6 - Reservar Livro");
             System.out.println("7 - Multas Pendentes");
             System.out.println("8 - Escrever Review");
-            System.out.println("9 - Sair");
+            System.out.println("9 - Alterar Senha");
+            System.out.println("10 - Alterar Contato");
+            System.out.println("11 - Sair");
             System.out.print("Digite o que deseja fazer: ");
 
             String opcao = input.nextLine();
@@ -156,7 +176,7 @@ public class Main {
                     devolverLivro();
                     break;
                 case "5":
-                    usuario.listarLivrosAlugados();
+                    cliente.listarLivrosAlugados();
                     break;
                 case "6":
                     reservar();
@@ -168,12 +188,42 @@ public class Main {
                     escreverReview();
                     break;
                 case "9":
+                    alterarSenha(cliente);
+                    break;
+                case "10":
+                    alterarContato(cliente);
+                    break;
+                case "11":
                     break menu;
                 default:
                     System.out.println("Opcao invalida!");
                     break;
             }
         }
+    }
+
+    private static void alterarSenha(Usuario usuario) {
+        System.out.print("Digite sua senha: ");
+
+        String senhaAtual = input.nextLine();
+
+        System.out.print("Digite a nova senha: ");
+        String senhaNova = input.nextLine();
+
+
+        usuario.alterarSenha(senhaAtual, senhaNova);
+    }
+
+    private static void alterarContato(Usuario usuario) {
+        System.out.print("Digite sua senha: ");
+
+        String senha = input.nextLine();
+
+        System.out.print("Digite o seu novo contato: ");
+        String contato = input.nextLine();
+
+
+        usuario.alterarContato(senha, contato);
     }
 
     private static void cadastrarAdmin() {
@@ -193,33 +243,35 @@ public class Main {
         biblioteca.criarAdmin(username, senha, contato);
     }
 
-    private static Usuario tentarLogar() {
+    private static boolean tentarLogar() {
         System.out.print("Digite o seu usuario: ");
         String username = input.nextLine();
 
         System.out.print("Digite a sua senha: ");
         String senha = input.nextLine();
 
-        for (Usuario usuario : biblioteca.usuarios) {
+        for (Cliente usuario : biblioteca.usuarios) {
             if (usuario.username.equals(username)){
                 if (usuario.senha.equals(senha)){
-                    return usuario;
+                    cliente = usuario;
+                    admin = null;
+                    return true;
                 }
-                
-                return null;
             }
         }
 
-        for (Usuario usuario : biblioteca.usuarios) {
+        for (Admin usuario : biblioteca.admins) {
             if (usuario.username.equals(username)){
                 if (usuario.senha.equals(senha))
-                    return usuario;
-                    
-                return null;
+                {
+                    admin = usuario;
+                    cliente = null;
+                    return true;
+                }
             }
         }
 
-        return null;
+        return false;
     }
 
     private static void devolverLivro() {
@@ -244,16 +296,16 @@ public class Main {
             }
         }
 
-        usuario.devolverLivro(livro,biblioteca,usuario.username);
+        cliente.devolverLivro(livro,biblioteca,cliente.username);
     }
 
     private static void olharMulta()
     {
         int atrasado = 0;
         
-        if (usuario.livrosAlugados.size() > 0) {
+        if (cliente.livrosAlugados.size() > 0) {
             
-            for (Livro livro: usuario.livrosAlugados) {
+            for (Livro livro: cliente.livrosAlugados) {
                 if (livro.checkarAtraso() == true) {
                     LocalDate hoje = LocalDate.now();
                     long atraso = ChronoUnit.DAYS.between(livro.dataDevolucao, hoje);
@@ -279,7 +331,7 @@ public class Main {
 
     private static void alugarLivro() {
 
-        for(Livro l: usuario.livrosAlugados) {
+        for(Livro l: cliente.livrosAlugados) {
             if(l.checkarAtraso()) {
                 System.out.println("Devido a existencia de livros atrasados, esta função está indisponivel!");
                 return;
@@ -317,7 +369,7 @@ public class Main {
             }
         }
 
-        usuario.alugarLivro(livro);
+        cliente.alugarLivro(livro);
     }
 
     private static void cadastrarUsuario() {
@@ -381,7 +433,7 @@ public class Main {
 
     private static void reservar()
     {
-        for(Livro l: usuario.livrosAlugados) {
+        for(Livro l: cliente.livrosAlugados) {
             if(l.checkarAtraso()) {
                 System.out.println("Devido a existencia de livros atrasados, esta função está indisponivel!");
                 return;
@@ -398,15 +450,15 @@ public class Main {
             return;
         }
 
-        usuario.reservar(livro);
+        cliente.reservar(livro);
     }
 
     private static void escreverReview() {
-        if (usuario.livrosDevolvidos.isEmpty()) {
+        if (cliente.livrosDevolvidos.isEmpty()) {
             System.out.println("Nenhum livro valido (devolva um livro para poder escrever uma review).");
         } else {
             int count = 1;
-            for (Livro l: usuario.livrosDevolvidos) {
+            for (Livro l: cliente.livrosDevolvidos) {
                 System.out.println(count++ + " - " + l.titulo);
             }
             System.out.println("Digite o número do livro que quer escrever a review: ");
@@ -416,7 +468,7 @@ public class Main {
             boolean formatoCorreto = false;
             while (!formatoCorreto) {
                 try {
-                    selecionado = usuario.livrosDevolvidos.get(numl - 1);
+                    selecionado = cliente.livrosDevolvidos.get(numl - 1);
                     formatoCorreto = true;
                 } catch (Exception e) {
                     System.out.println("A Input não apresenta o formato correto");
@@ -427,7 +479,7 @@ public class Main {
             System.out.println("Digite sua review:");
             String rev = input.nextLine();
             rev = input.nextLine();
-            selecionado.reviews.add(new Review(rev, usuario.username));
+            selecionado.reviews.add(new Review(rev, cliente.username));
         }       
     }
 

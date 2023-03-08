@@ -1,11 +1,12 @@
 import java.util.*;
 
 public class Biblioteca {
-    ArrayList<Usuario> usuarios = new ArrayList<>();
+    ArrayList<Admin> admins = new ArrayList<>();
+    ArrayList<Cliente> usuarios = new ArrayList<>();
     ArrayList<Livro> livros = new ArrayList<> ();
 
     public void criarUsuario(String username, String senha, String contato) {
-        Usuario novoUsuario = new Usuario(username, senha, contato);
+        Cliente novoUsuario = new Cliente(username, senha, contato);
         this.usuarios.add(novoUsuario);
     }
 
@@ -19,22 +20,18 @@ public class Biblioteca {
         }
     } 
 
-    public void listarConta(Usuario u) {
-        for (Usuario usuario : this.usuarios) {
-            
-            if(!(usuario instanceof Admin))
-            {
-                usuario.listarLivrosAlugados();
-            }
+    public void listarClientes() {
+        for (Cliente usuario : this.usuarios) {
+            usuario.printUsuario();
         }
     }
 
     public void listarLivrosAlugados()
     {
-        Usuario usuario = null;
+        Cliente usuario = null;
         int count = 0;
 
-        for (Usuario u : usuarios) {
+        for (Cliente u : usuarios) {
             usuario = u;
             if(usuario.livrosAlugados.size() != 0)
             {
@@ -55,7 +52,7 @@ public class Biblioteca {
             if (l.disponibilidade == false) {
                 if (l.checkarAtraso() == true) {
                     l.printLivro();
-                    for (Usuario u: usuarios) {
+                    for (Cliente u: usuarios) {
                         for (Livro liv: u.livrosAlugados) {
                             if (l.titulo.equals(liv.titulo)) {
 
@@ -77,17 +74,15 @@ public class Biblioteca {
     }
 
     public void criarAdmin(String username, String senha, String contato) {
-        Usuario novoUsuario = new Admin(username, senha, contato);
-        this.usuarios.add(novoUsuario);
+        Admin novoUsuario = new Admin(username, senha, contato);
+        this.admins.add(novoUsuario);
     }
 
     public void listarConta() {
-        for (Usuario usuario : this.usuarios)
+        for (Admin usuario : this.admins)
         {
-            if(usuario instanceof Admin)
-            {
-                System.out.println(usuario.username + " Contato: " + usuario.contato);
-            }
+            usuario.printUsuario();
+            
         }
     }
 
@@ -102,14 +97,14 @@ public class Biblioteca {
         return livro;
     }
 
-    public Usuario buscarUsuario(String username) {
-        for (Usuario usuario : this.usuarios) {
+    public Cliente buscarUsuario(String username) {
+        for (Cliente usuario : this.usuarios) {
             if (usuario.username.equals(username)) {
                 return usuario;
             }
         }
     
-        for (Usuario usuario : this.usuarios) {
+        for (Cliente usuario : this.usuarios) {
             if (usuario.username.equals(username)) {
                 return usuario;
             }
