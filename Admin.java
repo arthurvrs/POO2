@@ -11,8 +11,8 @@ public class Admin extends Usuario {
 
     long horasTrabalhadas;
     
-    public Admin (String a, String b, String c) {
-        super( a, b, c);
+    public Admin (String username, String senha, String contato) {
+        super( username, senha, contato);
     }
 
     public void baterPontoEntrada() {
@@ -33,6 +33,5 @@ public class Admin extends Usuario {
         System.out.print(", Contato: " + contato);
         System.out.println(", Horas: " + horasTrabalhadas);
         // System.out.println("Dia de Pagamen: " + contato);
-        
     }
 }

@@ -2,9 +2,9 @@ public class Review {
     public String review;
     public String reviewerUsername;
 
-    public Review(String a, String b){
-        review = a;
-        reviewerUsername = b;
+    public Review(String review, String username){
+        this.review = review;
+        reviewerUsername = username;
     }
 
     public void printReview () {

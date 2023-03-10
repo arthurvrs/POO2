@@ -8,7 +8,6 @@ public class Main {
     static Scanner input;
     static Cliente cliente;
     static Admin admin;
-    static boolean isAdmin = false;
 
     public static void main(String[] args) {
         biblioteca = new Biblioteca();
@@ -109,7 +108,7 @@ public class Main {
                     biblioteca.listarClientes();
                     break;
                 case "5":
-                    biblioteca.listarConta();
+                    biblioteca.listarAdministradores();
                     break;
                 case "6":
                     buscarLivro();
@@ -176,7 +175,7 @@ public class Main {
                     devolverLivro();
                     break;
                 case "5":
-                    cliente.listarLivrosAlugados();
+                    System.out.println(cliente.listarLivrosAlugados());
                     break;
                 case "6":
                     reservar();
@@ -211,7 +210,11 @@ public class Main {
         String senhaNova = input.nextLine();
 
 
-        usuario.alterarSenha(senhaAtual, senhaNova);
+        boolean conseguiuAlterar = usuario.alterarSenha(senhaAtual, senhaNova);
+
+        if (!conseguiuAlterar) {
+            System.out.println("Senha incorreta!");
+        }
     }
 
     private static void alterarContato(Usuario usuario) {
@@ -223,7 +226,11 @@ public class Main {
         String contato = input.nextLine();
 
 
-        usuario.alterarContato(senha, contato);
+        boolean conseguiuAlterar = usuario.alterarContato(senha, contato);
+
+        if (!conseguiuAlterar) {
+            System.out.println("Senha incorreta!");
+        }
     }
 
     private static void cadastrarAdmin() {
@@ -250,25 +257,17 @@ public class Main {
         System.out.print("Digite a sua senha: ");
         String senha = input.nextLine();
 
-        for (Cliente usuario : biblioteca.usuarios) {
-            if (usuario.username.equals(username)){
-                if (usuario.senha.equals(senha)){
-                    cliente = usuario;
-                    admin = null;
-                    return true;
-                }
-            }
+        admin = biblioteca.buscarAdmin(username);
+        cliente = biblioteca.buscarCliente(username);
+
+        if (admin != null && admin.isSenhaCorreta(senha)) {
+            cliente = null;
+            return true;
         }
 
-        for (Admin usuario : biblioteca.admins) {
-            if (usuario.username.equals(username)){
-                if (usuario.senha.equals(senha))
-                {
-                    admin = usuario;
-                    cliente = null;
-                    return true;
-                }
-            }
+        if (cliente != null && cliente.isSenhaCorreta(senha)) {
+            admin = null;
+            return true;
         }
 
         return false;
@@ -285,8 +284,13 @@ public class Main {
             return;
         }
 
+        if (!cliente.estaComLivroAlugado(livro)) {
+            System.out.println("Você não alugou este livro!");
+            return;
+        }
+
         if (livro.dataDevolucao != null) {
-            if(livro.checkarAtraso()) {
+            if(livro.isAtrasado()) {
                 LocalDate hoje = LocalDate.now();
                 long atraso = ChronoUnit.DAYS.between(livro.dataDevolucao, hoje);
                 System.out.println("Digite (ok) para comfirmar o pagamento da multa de R$:" + (5 + atraso*.75) + "\n(R$ 5.00 + R$ 0.75 por dia de atraso.)");
@@ -296,7 +300,9 @@ public class Main {
             }
         }
 
-        cliente.devolverLivro(livro,biblioteca,cliente.username);
+        cliente.devolverLivro(livro,biblioteca);
+        System.out.println("Livro devolvido com sucesso!");
+
     }
 
     private static void olharMulta()
@@ -306,12 +312,12 @@ public class Main {
         if (cliente.livrosAlugados.size() > 0) {
             
             for (Livro livro: cliente.livrosAlugados) {
-                if (livro.checkarAtraso() == true) {
+                if (livro.isAtrasado() == true) {
                     LocalDate hoje = LocalDate.now();
                     long atraso = ChronoUnit.DAYS.between(livro.dataDevolucao, hoje);
                     
                     System.out.print("Titulo:");
-                    System.out.print(" "+ livro.pegarTitulo());
+                    System.out.print(" "+ livro.getTitulo());
                     System.out.print(" multa de R$: " + (5 + atraso*.75) + " / ");
                     atrasado++;
                 }
@@ -332,7 +338,7 @@ public class Main {
     private static void alugarLivro() {
 
         for(Livro l: cliente.livrosAlugados) {
-            if(l.checkarAtraso()) {
+            if(l.isAtrasado()) {
                 System.out.println("Devido a existencia de livros atrasados, esta função está indisponivel!");
                 return;
             }
@@ -369,7 +375,12 @@ public class Main {
             }
         }
 
-        cliente.alugarLivro(livro);
+        if (livro.isDisponivel()) {
+            cliente.alugarLivro(livro);
+            System.out.println("Livro alugado com sucesso!");
+        } else {
+            System.out.println("Livro indisponivel!");
+        }
     }
 
     private static void cadastrarUsuario() {
@@ -388,6 +399,7 @@ public class Main {
         String senha = input.nextLine();
 
         biblioteca.criarUsuario(username, senha, contato);
+        System.out.println("Usuario cadastrado com sucesso!");
     }
 
     private static void cadastrarLivro() {
@@ -434,7 +446,7 @@ public class Main {
     private static void reservar()
     {
         for(Livro l: cliente.livrosAlugados) {
-            if(l.checkarAtraso()) {
+            if(l.isAtrasado()) {
                 System.out.println("Devido a existencia de livros atrasados, esta função está indisponivel!");
                 return;
             }
@@ -486,7 +498,7 @@ public class Main {
     private static void removerReview() {
         System.out.println("Digite o username do usuario:");
         String username = input.nextLine();
-        if(biblioteca.buscarUsuario(username) == null) {
+        if(biblioteca.buscarCliente(username) == null) {
             System.out.println("Usuario não encotrado");
             return;
         }

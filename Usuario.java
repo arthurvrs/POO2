@@ -1,7 +1,8 @@
 public abstract class Usuario {
-    public String username;
-    public String senha;
-    public String contato;
+    protected String username;
+    private String senha;
+
+    protected String contato;
 
     public Usuario (String username, String senha, String contato) {
         this.username = username;
@@ -9,21 +10,29 @@ public abstract class Usuario {
         this.contato = contato;
     }
 
-    public void alterarSenha(String senhaAtual, String senhaNova) {
-        if (senhaAtual.equals(this.senha)) {
-            this.senha = senhaNova;
+    public boolean alterarSenha(String senhaAtual, String novaSenha) {
+        if (isSenhaCorreta(senhaAtual)) {
+            this.senha = novaSenha;
+            return true;
         }
-        else 
-            System.out.println("Senha incorreta!");
+        return false;
     }
 
-    public void alterarContato(String senha, String novoContato) {
-        if (senha.equals(this.senha)) {
+    public boolean alterarContato(String senha, String novoContato) {
+        if (isSenhaCorreta(senha)) {
             this.contato = novoContato;
+            return true;
         }
-        else 
-            System.out.println("Senha incorreta!");
+        return false;
+    }
+
+    public boolean isSenhaCorreta(String senha) {
+        return this.senha.equals(senha);
     }
 
     abstract public void printUsuario();
+
+    public String getContato() {
+        return contato;
+    }
 }
