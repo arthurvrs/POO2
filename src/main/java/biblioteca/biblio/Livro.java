@@ -1,3 +1,5 @@
+package biblioteca.biblio;
+
 import java.time.*;
 import java.util.ArrayList;
 
@@ -84,17 +86,17 @@ public class Livro{
             System.out.print(", Livro indisponivel com possibilidade de reserva");
             System.out.print(", Devoluçao esperada no dia: " + dataDevolucao);
 
-            if (isAtrasado() == true) {
+            if (isAtrasado()) {
                 System.out.println(", Livro Atrasado.");
             } else System.out.println(" ");
 
         }
-        else if (!disponibilidade && !reservado)
+        else if (!disponibilidade)
         {
             System.out.print(", Livro indisponivel sem possibilidade de reserva");
             System.out.print(", Devoluçao esperada no dia: " + dataDevolucao);   
             
-            if (isAtrasado() == true) {
+            if (isAtrasado()) {
                 System.out.println(", Livro Atrasado.");
             } else System.out.println(" ");
         }

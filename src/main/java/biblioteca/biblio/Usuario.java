@@ -1,3 +1,5 @@
+package biblioteca.biblio;
+
 public abstract class Usuario {
     protected String username;
     private String senha;

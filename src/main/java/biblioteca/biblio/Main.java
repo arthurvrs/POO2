@@ -1,3 +1,5 @@
+package biblioteca.biblio;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -312,7 +314,7 @@ public class Main {
         if (cliente.livrosAlugados.size() > 0) {
             
             for (Livro livro: cliente.livrosAlugados) {
-                if (livro.isAtrasado() == true) {
+                if (livro.isAtrasado()) {
                     LocalDate hoje = LocalDate.now();
                     long atraso = ChronoUnit.DAYS.between(livro.dataDevolucao, hoje);
                     
@@ -326,7 +328,6 @@ public class Main {
         if(atrasado == 0)
         {
             System.out.println("Sem multas pendentes!");
-            return;    
         }
         else
         {
@@ -366,8 +367,7 @@ public class Main {
         boolean formatoCorreto = false;
         while (!formatoCorreto) {
             try {
-                LocalDate dataD = LocalDate.parse(devolucao, formato);
-                livro.dataDevolucao = dataD;
+                livro.dataDevolucao = LocalDate.parse(devolucao, formato);
                 formatoCorreto = true;
             } catch (Exception e) {
                 System.out.println("A Input não apresenta o formato correto, digite novamente a data no formato (YYYY-MM-DD)");
@@ -519,11 +519,9 @@ public class Main {
         }
         if (index == -1) {
             System.out.println("Usuario não possui review desse livro.");
-            return;
         } else {
             livro.reviews.remove(index);
             System.out.println("Review removida com sucesso.");
-            return;
         }
     }
 }

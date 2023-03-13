@@ -1,3 +1,5 @@
+package biblioteca.biblio;
+
 public class Review {
     public String review;
     public String reviewerUsername;

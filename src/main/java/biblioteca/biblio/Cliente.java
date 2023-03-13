@@ -1,7 +1,9 @@
+package biblioteca.biblio;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Cliente extends Usuario{
+public class Cliente extends Usuario {
 
     public ArrayList<Livro> livrosAlugados = new ArrayList<>();
     public ArrayList<Livro> livrosReservados = new ArrayList<>();
