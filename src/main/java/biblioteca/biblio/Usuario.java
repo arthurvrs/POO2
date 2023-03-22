@@ -1,15 +1,30 @@
 package biblioteca.biblio;
 
-public abstract class Usuario {
-    protected String username;
-    private String senha;
-
-    protected String contato;
+public class Usuario {
+    public String username;
+    public String senha;
+    public String contato;
 
     public Usuario (String username, String senha, String contato) {
         this.username = username;
         this.senha = senha;
         this.contato = contato;
+    }
+
+    public String getUsername() {
+        return username;
+      }
+    
+      public void setUsername(String username) {
+        this.username = username;
+      }
+    
+      public String getSenha() {
+        return senha;
+      }
+    
+      public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public boolean alterarSenha(String senhaAtual, String novaSenha) {
@@ -31,8 +46,6 @@ public abstract class Usuario {
     public boolean isSenhaCorreta(String senha) {
         return this.senha.equals(senha);
     }
-
-    abstract public void printUsuario();
 
     public String getContato() {
         return contato;

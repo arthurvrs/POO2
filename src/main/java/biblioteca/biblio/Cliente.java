@@ -124,7 +124,6 @@ public class Cliente extends Usuario {
         }
     }
 
-    @Override
     public void printUsuario() {
         System.out.println(listarLivrosAlugados() + "\nContato: " + contato);
     }

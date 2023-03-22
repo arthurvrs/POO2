@@ -7,6 +7,11 @@ public class Biblioteca {
     ArrayList<Cliente> clientes = new ArrayList<>();
     ArrayList<Livro> livros = new ArrayList<> ();
 
+    public void inicializarDados() {
+        admins.add(new Admin("admin", "admin", "admin@admin.com"));
+        admins.add(new Admin("user", "user", "user@user.com"));
+    }
+
     public void criarUsuario(String username, String senha, String contato) {
         Cliente novoUsuario = new Cliente(username, senha, contato);
         this.clientes.add(novoUsuario);

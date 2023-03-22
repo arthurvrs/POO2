@@ -29,7 +29,6 @@ public class Admin extends Usuario {
         horasTrabalhadas += horas;
     }
 
-    @Override
     public void printUsuario() {
         System.out.print(username);
         System.out.print(", Contato: " + contato);
