@@ -86,7 +86,7 @@ public class Livro {
         this.disponibilidade = !this.disponibilidade;
     }
 
-    public boolean isDisponivel() {
+    public boolean getDisponibilidade() {
         return disponibilidade;
     }
 

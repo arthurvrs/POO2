@@ -66,16 +66,16 @@ public class Cliente extends Usuario {
         }
         else
         {
-            if (livro.isReservado() && !livro.isDisponivel()) {
+            if (livro.isReservado() && !livro.getDisponibilidade()) {
                 livro.mudarReserva();
                 this.livrosReservados.add(livro);
                 System.out.println("Livro reservado com sucesso!");
             }
-            else if (livro.isReservado() && livro.isDisponivel())
+            else if (livro.isReservado() && livro.getDisponibilidade())
             {
                 System.out.println("Opcao invalida, livro atualmente disponivel!");
             }
-            else if (!livro.isDisponivel() && !livro.isReservado())
+            else if (!livro.getDisponibilidade() && !livro.isReservado())
             {
                 System.out.println("Livro já reservado!");
             }
@@ -95,7 +95,7 @@ public class Cliente extends Usuario {
 
     public void removerReserva(Livro livro, Cliente u)
     {
-        if (livro.isDisponivel() && u.livrosReservados.contains(livro)) {
+        if (livro.getDisponibilidade() && u.livrosReservados.contains(livro)) {
             livro.mudarDisponibilidade();
             LocalDate hoje = LocalDate.now();
             if(hoje.equals(livro.dataDevolucao))

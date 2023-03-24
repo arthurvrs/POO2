@@ -14,9 +14,15 @@ public class LivroImpl implements MainController<Livro>{
     }
 
     @Override
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> listarObjetos() {
         System.out.println("teste");
         return ResponseEntity.ok(biblioteca.livros);
     }
     
+    @Override
+    public ResponseEntity<?> pegarObjeto(String id) {
+
+        int idint = Integer.parseInt(id);
+        return ResponseEntity.ok(biblioteca.buscarLivroId(idint));
+    }
 }

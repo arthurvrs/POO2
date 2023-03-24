@@ -51,7 +51,7 @@ public class Biblioteca {
     public void listarLivrosAtrasados() {
         int count = 0;
         for(Livro livro: livros) {
-            if (!livro.isDisponivel() && livro.isAtrasado()) {
+            if (!livro.getDisponibilidade() && livro.isAtrasado()) {
                 livro.printLivro();
 
                 for (Cliente cliente: clientes) {
@@ -84,6 +84,18 @@ public class Biblioteca {
     
         for (Livro l : this.livros) {
             if (l.titulo.equals(titulo))
+                livro = l;
+        }
+
+        return livro;
+    }
+
+    public Livro buscarLivroId(int id) {
+       
+        Livro livro = null;
+    
+        for (Livro l : this.livros) {
+            if (l.id == id)
                 livro = l;
         }
 

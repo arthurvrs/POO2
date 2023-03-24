@@ -21,8 +21,14 @@ public class UsuarioImpl implements MainController<Usuario> {
     }
 
     @Override
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> listarObjetos() {
         return ResponseEntity.ok(biblioteca.clientes);
+    }
+
+    @Override
+    public ResponseEntity<?> pegarObjeto(String id) {
+        Usuario usuario = biblioteca.buscarUsuario(id);
+        return ResponseEntity.ok(usuario);
     }
 
     @PostMapping("/login")
