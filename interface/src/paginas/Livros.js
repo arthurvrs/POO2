@@ -12,30 +12,18 @@ function Livros() {
     axios
       .get("http://localhost:8080/livro/getall")
       .then((response) => {
-        console.log(response.data);
         return response.data;
       })
       .then((data) => {
-        const livros = [];
-
-        for (const key in data) {
-          const livro = {
-            id: key,
-            ...data[key],
-          };
-
-          livros.push(livro);
-        }
-
         setIsLoading(false);
-        setListaLivros(livros);
+        setListaLivros(data);
       });
   }, []);
 
   if (isLoading) {
     return (
       <section>
-        <p>Loading...</p>
+        <p>Carregando...</p>
       </section>
     );
   }
