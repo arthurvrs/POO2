@@ -1,6 +1,8 @@
 import BarraDeNavegacao from './BarraDeNavegacao';
 import classes from './Layout.module.css'
 
+
+
 function Layout(props) {
   return (
     <div>

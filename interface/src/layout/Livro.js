@@ -6,7 +6,7 @@ function Livro(props) {
   return (
     <Link
       to={{
-        pathname: "/livros/livro",
+        pathname: `/livros/${props.id}`,
         state: { titulo: "callioli" },
       }}
     >

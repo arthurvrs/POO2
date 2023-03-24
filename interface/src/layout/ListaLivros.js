@@ -6,7 +6,7 @@ function ListaLivros(props) {
     <div className={classes.div}>
       {props.livros.map((livro) => (
         <Livro 
-        key={livro.id}
+        id={livro.id}
         titulo={livro.titulo} 
         editora={livro.editora}
         capaUrl={livro.capaUrl}

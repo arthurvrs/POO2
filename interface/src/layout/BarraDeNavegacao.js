@@ -8,17 +8,15 @@ function BarraDeNavegacao() {
   const UserInfo = useContext(UserContext);
   const { logout } = useContext(UserContext);
   console.log(UserInfo.type);
-  if (UserInfo.type === "nenhum") {
+
+  if (UserInfo.type === "user") {
     return (
       <header className={classes.header}>
-        <div>Livraria</div>
+        <Link to="/">Biblioteca</Link>
         <div className={classes.dropdown}>
           <button className={classes.dropbtn}>Menu</button>
           <div className={classes.dropdowncontent}>
             <Link to="/">Home</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/cadastro">Cadastrar-se</Link>
-            <Link to="/cadastro-livro">Cadastrar Livro</Link>
             <Link to="/livros">Livros</Link>
           </div>
         </div>
@@ -26,19 +24,21 @@ function BarraDeNavegacao() {
         <nav>
           <ul>
             <li>
-              <Link to="/login">login</Link>
+              <Link to={"/usuario"}>{UserInfo.username}</Link>
             </li>
             <li>
-              <Link to="/cadastro">Cadastro</Link>
+              <Link to="/" onClick={logout}>
+                Sair
+              </Link>
             </li>
           </ul>
         </nav>
       </header>
     );
-  } else {
+  } else if (UserInfo.type === "admin") {
     return (
       <header className={classes.header}>
-        <div>Livraria</div>
+        <Link to="/">Biblioteca</Link>
         <div className={classes.dropdown}>
           <button className={classes.dropbtn}>Menu</button>
           <div className={classes.dropdowncontent}>
@@ -52,12 +52,37 @@ function BarraDeNavegacao() {
         <nav>
           <ul>
             <li>
-              <Link to="/login">{UserInfo.username}</Link>
+              <Link to={"/usuario"}>{UserInfo.username}</Link>
             </li>
             <li>
               <Link to="/" onClick={logout}>
                 Sair
               </Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
+    );
+  } else {
+    return (
+      <header className={classes.header}>
+        <Link to="/">Biblioteca</Link>
+        <div className={classes.dropdown}>
+          <button className={classes.dropbtn}>Menu</button>
+          <div className={classes.dropdowncontent}>
+            <Link to="/">Home</Link>
+            <Link to="/login">Login</Link>
+            <Link to="/cadastro">Cadastrar-se</Link>
+          </div>
+        </div>
+        <input type="text"></input>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/login">login</Link>
+            </li>
+            <li>
+              <Link to="/cadastro">Cadastro</Link>
             </li>
           </ul>
         </nav>
