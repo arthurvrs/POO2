@@ -20,7 +20,8 @@ function App() {
           <Route path={"/login"} element={<Login />} />
           <Route path={"/cadastro-livro"} element={<CadastroLivro />} />
           <Route path={"/livros"} element={<Livros />} />
-          <Route path={"/livros/:livro"} component={LivroDetalhes} />
+          <Route path={"/livros/:id"} element={<LivroDetalhes />} />
+          <Route path={"/usuario"} />
         </Routes>
       </Layout>
     </UserContextProvider>
