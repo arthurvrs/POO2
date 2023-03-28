@@ -1,16 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import ListaLivros from "../componentes/ListaLivros";
 
-function Livros() {
+function Busca() {
+  const { search } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [listaLivros, setListaLivros] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("http://localhost:8080/livro/getall")
+      .get(`http://localhost:8080/livro/busca/${search}`)
       .then((response) => {
         return response.data;
       })
@@ -36,4 +38,4 @@ function Livros() {
   );
 }
 
-export default Livros;
+export default Busca;

@@ -1,16 +1,16 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import classes from "./LivroDetalhes.module.css";
 import UserContext from "../user-context";
-import ListaReviews from "../componentes/ListarReviews";
 
-function LivroDetalhes() {
-  const { id } = useParams();
+function Alugar() {
   const UserInfo = useContext(UserContext);
+  const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [livro, setLivro] = useState([]);
+  const tempoInputRef = useRef();
 
   useEffect(() => {
     setIsLoading(true);
@@ -26,13 +26,14 @@ function LivroDetalhes() {
       });
   }, []);
 
-  const devolver = (event)  => {
+  const SubmitHandler = (event) => {
     event.preventDefault();
     const user = {
       username: UserInfo.username,
     };
+    const tempo = tempoInputRef.current.value;
     axios
-      .post(`http://localhost:8080/livro/devolver/${id}`, user)
+      .post(`http://localhost:8080/livro/alugar/${id}/${tempo}`, user)
       .then((response) => {
         console.log(response.data);
         if (response.data === "ok") {
@@ -43,24 +44,6 @@ function LivroDetalhes() {
         console.log(error);
       });
   };
-
-  const reservar = (event) => {
-    event.preventDefault();
-    const user = {
-      username: UserInfo.username,
-    };
-    axios
-      .post(`http://localhost:8080/livro/reservar/${id}`, user)
-      .then((response) => {
-        console.log(response.data);
-        if (response.data === "ok") {
-          navigate("/",{replace: true})
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 
   if (isLoading) {
     return (
@@ -90,31 +73,17 @@ function LivroDetalhes() {
           </div>
         </div>
       </div>
-      <div className={classes.div}>
-        <div>Sinopse:</div>
-        <div>{livro.sinopse}</div>
+      <div>
+        <form className={classes.div} onSubmit={SubmitHandler}>
+          <div className={classes.basicinfo}>
+            <label htmlFor="title">Tempo (dias) :</label>
+            <input type="text" ref={tempoInputRef} />
+            <button type="submit">Alugar</button>
+          </div>
+        </form>
       </div>
-      <div className={classes.div}>
-        {UserInfo.username === livro.username ? (
-          <button onClick={devolver}>Devolver</button>
-        ) : livro.disponibilidade ? (
-          <Link
-            to={{
-              pathname: `/alugar/${livro.id}`,
-            }}
-          >
-            <button>Alugar</button>
-          </Link>
-        ) : livro.reservado ? (
-          <button onClick={reservar}>Reservar</button>
-        ) : (
-          <div>Livro indisponivel</div>
-        )}
-      </div>
-      <div className={classes.div}>Reviews:</div>
-      <ListaReviews reviews={livro.reviews}/>
     </div>
   );
 }
 
-export default LivroDetalhes;
+export default Alugar;

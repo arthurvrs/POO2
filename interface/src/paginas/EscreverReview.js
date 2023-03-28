@@ -1,21 +1,24 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
-import ListaLivros from "../componentes/ListaLivros";
+import ListaLivros2 from "../componentes/ListaLivros2";
+import UserContext from "../user-context";
 
-function Livros() {
+function EscreverReview() {
+    const UserInfo = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [listaLivros, setListaLivros] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("http://localhost:8080/livro/getall")
+      .get(`http://localhost:8080/usuario/livrosDevolvidos/${UserInfo.username}`)
       .then((response) => {
         return response.data;
       })
       .then((data) => {
         setIsLoading(false);
+        console.log(data);
         setListaLivros(data);
       });
   }, []);
@@ -30,10 +33,10 @@ function Livros() {
 
   return (
     <section>
-      <div>Livros</div>
-      <ListaLivros livros={listaLivros} />
+      <div>Selecione um dos livros devolvidos para escrever o review</div>
+      <ListaLivros2 livros={listaLivros} />
     </section>
   );
 }
 
-export default Livros;
+export default EscreverReview;
