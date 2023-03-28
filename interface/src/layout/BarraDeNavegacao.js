@@ -1,5 +1,6 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useContext, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../user-context";
 
 import classes from "./BarraDeNavegacao.module.css";
@@ -7,7 +8,32 @@ import classes from "./BarraDeNavegacao.module.css";
 function BarraDeNavegacao() {
   const UserInfo = useContext(UserContext);
   const { logout } = useContext(UserContext);
+  const navigate = useNavigate();
   console.log(UserInfo.type);
+
+  const buscaInputRef = useRef();
+
+  function sair() {
+    const usuario = {
+      username: UserInfo.username,
+    };
+    axios
+      .post("http://localhost:8080/usuario/logout", usuario)
+      .then((response) => {
+        console.log(response.data);
+        logout();
+        navigate("/", { replace: true });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const busca = (event) => {
+    event.preventDefault();
+    const searchData = buscaInputRef.current.value;
+    navigate(`/busca/${searchData}`)
+  };
 
   if (UserInfo.type === "user") {
     return (
@@ -18,16 +44,22 @@ function BarraDeNavegacao() {
           <div className={classes.dropdowncontent}>
             <Link to="/">Home</Link>
             <Link to="/livros">Livros</Link>
+            <Link to="/livros-alugados">Livros Alugados</Link>
+            <Link to="/livros-devolvidos">Escrever Review</Link>
+            <Link to="/multas">Multas</Link>
           </div>
         </div>
-        <input type="text"></input>
+        <form onSubmit={busca}>
+          <input type="text" ref={buscaInputRef}/>
+          <button type="submit" className={classes.button}>Busca</button>
+        </form>
         <nav>
           <ul>
             <li>
               <Link to={"/usuario"}>{UserInfo.username}</Link>
             </li>
             <li>
-              <Link to="/" onClick={logout}>
+              <Link to="/" onClick={sair}>
                 Sair
               </Link>
             </li>
@@ -43,19 +75,25 @@ function BarraDeNavegacao() {
           <button className={classes.dropbtn}>Menu</button>
           <div className={classes.dropdowncontent}>
             <Link to="/">Home</Link>
+            <Link to="cadastro-admin">Cadastrar Administrador</Link>
             <Link to="/cadastro-livro">Cadastrar Livro</Link>
             <Link to="/livros">Livros</Link>
+            <Link to="/usuarios-atrasados">Usuarios Atrasados</Link>
+            <Link to="/livros-atrasados">Livros Atrasados</Link>
             <Link to="/teste">Teste</Link>
           </div>
         </div>
-        <input type="text"></input>
+        <form onSubmit={busca}>
+          <input type="text" ref={buscaInputRef}/>
+          <button type="submit" className={classes.button}>Busca</button>
+        </form>
         <nav>
           <ul>
             <li>
               <Link to={"/usuario"}>{UserInfo.username}</Link>
             </li>
             <li>
-              <Link to="/" onClick={logout}>
+              <Link to="/" onClick={sair}>
                 Sair
               </Link>
             </li>
@@ -75,7 +113,10 @@ function BarraDeNavegacao() {
             <Link to="/cadastro">Cadastrar-se</Link>
           </div>
         </div>
-        <input type="text"></input>
+        <form onSubmit={busca}>
+          <input type="text" ref={buscaInputRef}/>
+          <button type="submit" className={classes.button}>Busca</button>
+        </form>
         <nav>
           <ul>
             <li>

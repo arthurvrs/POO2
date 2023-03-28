@@ -1,0 +1,25 @@
+.form {
+  padding: 20px;
+}
+
+.div {
+  margin-bottom: 10px;
+}
+
+.div label {
+  margin-bottom: 5px;
+}
+
+.div input, textarea{
+  width: 100%;
+}
+
+
+.div button {
+  background-color: gray;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  margin: 0.5rem;
+}

@@ -1,0 +1,63 @@
+.header {
+  width: 100%;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+}
+
+.header input {
+  width: 40%;
+}
+
+.header ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: baseline;
+}
+
+.header li {
+  margin-left: 3rem;
+}
+
+.header .dropbtn {
+  display: flex;
+  background-color: white;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdowncontent {
+  display: none;
+  position: absolute;
+}
+
+.dropdowncontent a {
+  padding: 12px 20px;
+  display: block;
+}
+
+.dropdowncontent a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdowncontent {
+  display: block;
+  background-color: #ddd;
+}
+
+.button {
+  background-color: gray;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  margin: 0.5rem;
+}
