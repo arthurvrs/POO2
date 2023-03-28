@@ -14,19 +14,13 @@ public class Main {
     public static void main(String[] args) {
         biblioteca = new Biblioteca();
         input = new Scanner(System.in);
-
-        biblioteca.admins.add(new Admin("admin", "admin", "admin@admin.com"));
+        
+        biblioteca.inicializarDados();
 
         do {
             loginMenu();
-
-            if (cliente != null ) {
-                usuarioMenu();
-            }
-            if (admin != null) {
-                adminMenu();
-            }
-        } while (cliente != null || admin != null);
+            
+        } while (false);
 
         System.out.println("\n                           ATÉ A PRÓXIMA!");
         input.close();
@@ -50,17 +44,6 @@ public class Main {
             switch (opcao) {
                 case "1":
                     conseguiuLogar = tentarLogar();
-
-                    if (!conseguiuLogar)
-                        System.out.println("\n\nUsuario ou senha invalidos! Tente novamente");
-                    else if (cliente != null)
-                        System.out.println("Usuario " + cliente.username + " logado com sucesso!");
-                    else
-                    {
-                        System.out.println("Usuario " + admin.username + " logado com sucesso!");
-                        admin.baterPontoEntrada();
-                    }
-
                     break;
                 case "2":
                     cadastrarUsuario();
@@ -93,6 +76,7 @@ public class Main {
             System.out.println("13 - Sair");
             System.out.print("Digite o que deseja fazer: ");
 
+            int[] count = {0};
             String opcao = input.nextLine();
             System.out.println();
 
@@ -116,7 +100,7 @@ public class Main {
                     buscarLivro();
                     break;
                 case "7":
-                    biblioteca.listarLivrosAlugados();
+                    biblioteca.listarLivros(count);
                     break;
                 case "8":
                     biblioteca.listarLivrosAtrasados();
@@ -258,18 +242,27 @@ public class Main {
 
         System.out.print("Digite a sua senha: ");
         String senha = input.nextLine();
-
-        admin = biblioteca.buscarAdmin(username);
-        cliente = biblioteca.buscarCliente(username);
-
-        if (admin != null && admin.isSenhaCorreta(senha)) {
-            cliente = null;
-            return true;
+        
+        Usuario userLogado = biblioteca.login(username, senha);
+        
+        if(userLogado instanceof Cliente)
+        {
+            System.out.println("Usuario " + userLogado.username + " logado com sucesso!");
+            cliente = (Cliente) userLogado;
+            usuarioMenu();
         }
 
-        if (cliente != null && cliente.isSenhaCorreta(senha)) {
-            admin = null;
-            return true;
+        else if(userLogado instanceof Admin)
+        {
+            System.out.println("Usuario " + userLogado.username + " logado com sucesso!");
+            admin = (Admin) userLogado;
+            admin.baterPontoEntrada();
+            adminMenu();
+        }
+
+        else
+        {
+            System.out.println("Usuario ou senha invalidos.");
         }
 
         return false;
@@ -375,7 +368,7 @@ public class Main {
             }
         }
 
-        if (livro.isDisponivel()) {
+        if (livro.getDisponibilidade()) {
             cliente.alugarLivro(livro);
             System.out.println("Livro alugado com sucesso!");
         } else {
@@ -415,7 +408,7 @@ public class Main {
         System.out.println("Ano de lançamento do Livro:");
         String anoLancamento = input.nextLine();
 
-        Livro livro = new Livro(titulo, autor, editora, anoLancamento);
+        Livro livro = new Livro(titulo, autor, editora, anoLancamento, anoLancamento, anoLancamento);
         
         biblioteca.cadastrarLivro(livro);
     }

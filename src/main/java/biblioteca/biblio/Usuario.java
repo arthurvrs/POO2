@@ -4,7 +4,7 @@ public class Usuario {
     public String username;
     public String senha;
     public String contato;
-
+    
     public Usuario (String username, String senha, String contato) {
         this.username = username;
         this.senha = senha;
@@ -49,5 +49,25 @@ public class Usuario {
 
     public String getContato() {
         return contato;
+    }
+
+    public boolean isCliente()
+    {
+        return false;
+    }
+
+    public void printUsuario(Usuario usuario) {
+
+        System.out.println(this.username + "\nContato: " + contato);
+    }
+
+    public void ListarLivros(Usuario usuario, int[] count)
+    {
+        System.out.println("Nenhum Livro Alugado!");
+    }
+
+    public void listarLivrosAtrasados(Usuario usuario, Livro livro)
+    {
+        System.out.println("Nenhum Livro Atrasado!");
     }
 }

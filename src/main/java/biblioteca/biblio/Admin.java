@@ -25,7 +25,7 @@ public class Admin extends Usuario {
         LocalTime horaSaida = LocalTime.now();
 
 
-        long horas = ChronoUnit.MINUTES.between(horaEntrada, horaSaida);
+        long horas = ChronoUnit.HOURS.between(horaEntrada, horaSaida);
         horasTrabalhadas += horas;
     }
 

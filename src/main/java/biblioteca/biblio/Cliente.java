@@ -30,7 +30,7 @@ public class Cliente extends Usuario {
     }
 
     public void devolverLivro(Livro livro, Biblioteca biblioteca) {
-
+        
         if (estaComLivroAlugado(livro)) {
             livrosAlugados.remove(livro);
             livro.mudarDisponibilidade();
@@ -84,18 +84,22 @@ public class Cliente extends Usuario {
     
     public void buscarReserva(Livro livro, Biblioteca biblioteca)
     {
-        for(Cliente cliente : biblioteca.clientes)
+        for(Usuario cliente : biblioteca.usuarios)
         {
-            if(!cliente.username.equals(this.username))
+            if(cliente instanceof Cliente)
             {
-                removerReserva(livro, cliente);
+                if(!cliente.username.equals(this.username))
+                {
+                    removerReserva(livro, cliente);
+                }
             }
         }
     }
 
-    public void removerReserva(Livro livro, Cliente u)
+    public void removerReserva(Livro livro, Usuario u)
     {
-        if (livro.getDisponibilidade() && u.livrosReservados.contains(livro)) {
+        Cliente cliente = (Cliente) u;
+        if (livro.getDisponibilidade() && cliente.livrosReservados.contains(livro)) {
             livro.mudarDisponibilidade();
             LocalDate hoje = LocalDate.now();
             if(hoje.equals(livro.dataDevolucao))
@@ -106,29 +110,56 @@ public class Cliente extends Usuario {
             {
                 livro.dataDevolucao = hoje.plusDays(14);
             }
-            u.livrosAlugados.add(livro);
+            cliente.livrosAlugados.add(livro);
         }
        
         String n = livro.titulo;
        
-        for(int j = 0;j < u.livrosReservados.size(); j++)
+        for(int j = 0;j < cliente.livrosReservados.size(); j++)
         {
-            Livro aux = u.livrosReservados.get(j);
+            Livro aux = cliente.livrosReservados.get(j);
             if(aux.titulo.equals(n))
             {
                 aux.mudarReserva();
-                u.livrosReservados.remove(j);
+                cliente.livrosReservados.remove(j);
                 System.out.println("Livro reservado foi alugado!");
                 break;
             }
         }
     }
 
-    public void printUsuario() {
+    @Override
+    public void printUsuario(Usuario usuarios) {
         System.out.println(listarLivrosAlugados() + "\nContato: " + contato);
     }
 
     public boolean estaComLivroAlugado(Livro livro) {
         return livrosAlugados.contains(livro);
+    }
+
+    @Override
+    public boolean isCliente()
+    {
+        return true;
+    }
+
+    @Override
+    public void ListarLivros(Usuario usuarios, int[] count)
+    {
+        
+        if(!livrosAlugados.isEmpty()) {
+            System.out.println(listarLivrosAlugados());
+            count[0] ++;
+        }
+        
+    }
+
+    @Override
+    public void listarLivrosAtrasados(Usuario usuario, Livro livro)
+    {
+        if (estaComLivroAlugado(livro)) {
+            System.out.print("O livro está com o seguinte usuario: ");
+            System.out.println(this.username + " Forma de contato: " + this.contato);
+        }
     }
 }
