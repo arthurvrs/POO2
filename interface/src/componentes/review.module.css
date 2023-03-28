@@ -1,0 +1,10 @@
+.div{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 15;
+}
+
+.username {
+ margin-left: 10px
+}
