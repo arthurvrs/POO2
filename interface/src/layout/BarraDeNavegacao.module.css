@@ -8,7 +8,7 @@
 }
 
 .header input {
-  width: 40%;
+  width: 70%;
 }
 
 .header ul {
@@ -24,6 +24,7 @@
 }
 
 .header .dropbtn {
+  margin-left: 45px;
   display: flex;
   background-color: white;
   border: none;
