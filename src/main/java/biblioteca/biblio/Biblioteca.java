@@ -153,9 +153,5 @@ public class Biblioteca {
             usuario = buscarCliente(username);
 
         return usuario;
-    }
-    
-
-
-    
+    }   
 }

@@ -12,6 +12,7 @@ public class Livro {
     public String ano;
     public String capaUrl;
     public String sinopse;
+    private String username;
 
     public boolean disponibilidade;
     public boolean reservado;
@@ -29,6 +30,7 @@ public class Livro {
         this.ano = ano;
         this.sinopse = sinopse;
 
+        username = null;
         disponibilidade = true;
         dataDevolucao = LocalDate.now();
         reservado = true;
@@ -88,6 +90,14 @@ public class Livro {
 
     public boolean getDisponibilidade() {
         return disponibilidade;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void mudarReserva() {

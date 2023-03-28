@@ -1,5 +1,7 @@
 package biblioteca.biblio;
 
+import java.util.ArrayList;
+
 public class Usuario {
     public String username;
     public String senha;
@@ -69,5 +71,29 @@ public class Usuario {
     public void listarLivrosAtrasados(Usuario usuario, Livro livro)
     {
         System.out.println("Nenhum Livro Atrasado!");
+    }
+
+    public boolean temLivroAtrasado() {
+       return false;
+    }
+
+    public void baterPontoEntrada() {}
+
+    public void baterPontoSaida() {}
+
+    public void alugarLivro(Livro livro) {}
+
+    public ArrayList<Livro> pegarLivrosAlugados() {
+        return null;
+    }
+
+    public ArrayList<Livro> pegarLivrosDevolvidos() {
+        return null;
+    }
+
+    public void devolverLivro(Livro livro, Biblioteca biblioteca) {}
+
+    public String reservar(Livro livro) {
+        return "usuario invalido";
     }
 }

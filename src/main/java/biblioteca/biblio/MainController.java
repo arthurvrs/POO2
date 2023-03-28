@@ -39,4 +39,7 @@ public interface MainController<T> {
     @GetMapping("/{id}")
     public ResponseEntity<?> pegarObjeto(@PathVariable String id);
 
+    @GetMapping("/get-atrasados")
+    public ResponseEntity<?> atrasados();
+
 }
