@@ -87,9 +87,9 @@ function BarraDeNavegacao() {
               <Link to="cadastro-admin">Cadastrar Administrador</Link>
               <Link to="/cadastro-livro">Cadastrar Livro</Link>
               <Link to="/livros">Livros</Link>
+              <Link to="/usuario/listar-usuarios">Usuarios</Link>
               <Link to="/usuarios-atrasados">Usuarios Atrasados</Link>
               <Link to="/livros-atrasados">Livros Atrasados</Link>
-              <Link to="/teste">Teste</Link>
             </div>
           </div>
         </div>
