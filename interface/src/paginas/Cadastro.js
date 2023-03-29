@@ -56,11 +56,11 @@ function Cadastro() {
         </div>
         <div className={classes.div}>
           <label htmlFor="title">Senha:</label>
-          <input type="text" ref={password1InputRef} />
+          <input type="password" ref={password1InputRef} />
         </div>
         <div className={classes.div}>
           <label htmlFor="title">Confirmar Senha:</label>
-          <input type="text" ref={password2InputRef} />
+          <input type="password" ref={password2InputRef} />
         </div>
         <div className={classes.div}>
           <button type="submit">Confirmar</button>

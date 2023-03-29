@@ -5,8 +5,8 @@ import classes from "../layout/input.module.css";
 import UserContext from "../user-context";
 import { Link, useNavigate } from "react-router-dom";
 
-function Login() {
-  const usernameInputRef = useRef();
+function Contato() {
+  const contatoInputRef = useRef();
   const passwordInputRef = useRef();
 
   const UserInfo = useContext(UserContext);
@@ -14,24 +14,20 @@ function Login() {
 
   const SubmitHandler = (event) => {
     event.preventDefault();
-    const usernameData = usernameInputRef.current.value;
+    const contatoData =  contatoInputRef.current.value;
     const passwordData = passwordInputRef.current.value;
 
     const usuario = {
-      username: usernameData,
+      username: UserInfo.username,
       senha: passwordData,
     };
     axios
-      .post("http://localhost:8080/usuario/login", usuario)
+      .post(`http://localhost:8080/usuario/contato/${contatoData}`, usuario)
       .then((response) => {
-        if (response.data !== "nenhum") {
-          console.log(usernameData, response.data);
-          UserInfo.login(usernameData, response.data);
+        console.log(response.data);
+        if (response.data === "ok") {
           navigate("/", { replace: true });
-        } else {
-          console.log("Usuario ou senha invalidos");
-        }
-
+        } 
       })
       .catch((error) => {
         console.log(error);
@@ -43,11 +39,11 @@ function Login() {
       <div>Login</div>
       <form className={classes.form} onSubmit={SubmitHandler}>
         <div className={classes.div}>
-          <label htmlFor="title">Nome de usuario:</label>
-          <input type="text" ref={usernameInputRef} />
+          <label htmlFor="title">Nova forma de contato:</label>
+          <input type="text" ref={contatoInputRef} />
         </div>
         <div className={classes.div}>
-          <label htmlFor="title">Senha:</label>
+          <label htmlFor="title">Confirme a senha atual:</label>
           <input type="password" ref={passwordInputRef} />
         </div>
         <div className={classes.div}>
@@ -61,4 +57,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Contato;
