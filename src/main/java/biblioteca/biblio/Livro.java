@@ -3,23 +3,25 @@ package biblioteca.biblio;
 import java.time.*;
 import java.util.ArrayList;
 
+import org.hibernate.type.descriptor.java.LocalDateJavaType;
+
 public class Livro {
 
-    public int id;
-    public String titulo;
-    public String autor;
-    public String editora;
-    public String ano;
-    public String capaUrl;
-    public String sinopse;
+    private int id;
+    private String titulo;
+    private String autor;
+    private String editora;
+    private String ano;
+    private String capaUrl;
+    private String sinopse;
     private String username;
 
-    public boolean disponibilidade;
-    public boolean reservado;
-    public LocalDate dataDevolucao;
-    public ArrayList<Review> reviews = new ArrayList<>();
+   private boolean disponibilidade;
+   private boolean reservado;
+   private LocalDate dataDevolucao;
+   public ArrayList<Review> reviews = new ArrayList<>();
 
-    public static int idcount = 1;
+   private static int idcount = 1;
 
     public Livro(String titulo, String autor, String capaUrl, String editora, String ano, String sinopse) {
         this.id = idcount++;
@@ -92,12 +94,22 @@ public class Livro {
         return disponibilidade;
     }
 
+    public LocalDate getDataDevolucao()
+    {
+        return dataDevolucao;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setDataDevolucao(LocalDate data)
+    {
+        this.dataDevolucao = data;
     }
 
     public void mudarReserva() {

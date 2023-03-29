@@ -7,11 +7,11 @@ import java.time.temporal.ChronoUnit;
 public class Admin extends Usuario {
     double salario;
 
-    LocalDate diaPagamento;
+    private LocalDate diaPagamento;
 
-    LocalTime horaEntrada;
+    private LocalTime horaEntrada;
 
-    long horasTrabalhadas;
+    private long horasTrabalhadas;
 
     public Admin(String username, String senha, String contato) {
         super(username, senha, contato);
@@ -35,8 +35,8 @@ public class Admin extends Usuario {
     }
 
     public void printUsuario() {
-        System.out.print(username);
-        System.out.print(", Contato: " + contato);
+        System.out.print(getUsername());
+        System.out.print(", Contato: " + getContato());
         System.out.println(", Horas: " + horasTrabalhadas);
         // System.out.println("Dia de Pagamen: " + contato);
     }

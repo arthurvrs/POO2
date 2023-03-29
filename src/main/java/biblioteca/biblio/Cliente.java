@@ -19,7 +19,7 @@ public class Cliente extends Usuario {
             return false;
 
         Cliente other = (Cliente) obj;
-        return this.username.equals(other.username);
+        return this.getUsername().equals(other.getUsername());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Cliente extends Usuario {
     }
 
     public String listarLivrosAlugados() {
-        StringBuilder buffer = new StringBuilder(username);
+        StringBuilder buffer = new StringBuilder(getUsername());
         buffer.append(" -> ");
 
         if (livrosAlugados.isEmpty()) {
@@ -79,7 +79,7 @@ public class Cliente extends Usuario {
     public void buscarReserva(Livro livro, Biblioteca biblioteca) {
         for (Usuario cliente : biblioteca.usuarios) {
             if (cliente instanceof Cliente) {
-                if (!cliente.username.equals(this.username)) {
+                if (!cliente.getUsername().equals(this.getUsername())) {
                     removerReserva(livro, cliente);
                 }
             }
@@ -91,16 +91,18 @@ public class Cliente extends Usuario {
         if (livro.getDisponibilidade() && cliente.livrosReservados.contains(livro)) {
             livro.mudarDisponibilidade();
             LocalDate hoje = LocalDate.now();
-            livro.dataDevolucao = hoje.plusDays(14);
-            livro.setUsername(username);
-            livrosAlugados.add(livro);
+            hoje = hoje.plusDays(14);
+            System.out.println(hoje);
+            livro.setDataDevolucao(hoje);
+            livro.setUsername(getUsername());
+            cliente.livrosAlugados.add(livro);
         }
 
-        String n = livro.titulo;
+        String n = livro.getTitulo();
 
         for (int j = 0; j < cliente.livrosReservados.size(); j++) {
             Livro aux = cliente.livrosReservados.get(j);
-            if (aux.titulo.equals(n)) {
+            if (aux.getTitulo().equals(n)) {
                 aux.mudarReserva();
                 cliente.livrosReservados.remove(j);
                 System.out.println("Livro reservado foi alugado!");
@@ -111,7 +113,7 @@ public class Cliente extends Usuario {
 
     @Override
     public void printUsuario(Usuario usuarios) {
-        System.out.println(listarLivrosAlugados() + "\nContato: " + contato);
+        System.out.println(listarLivrosAlugados() + "\nContato: " + getContato());
     }
 
     public boolean estaComLivroAlugado(Livro livro) {
@@ -137,7 +139,7 @@ public class Cliente extends Usuario {
     public void listarLivrosAtrasados(Usuario usuario, Livro livro) {
         if (estaComLivroAlugado(livro)) {
             System.out.print("O livro está com o seguinte usuario: ");
-            System.out.println(this.username + " Forma de contato: " + this.contato);
+            System.out.println(this.getUsername() + " Forma de contato: " + this.getContato());
         }
     }
 

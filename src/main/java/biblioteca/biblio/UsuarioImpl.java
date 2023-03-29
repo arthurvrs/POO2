@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioImpl implements MainController<Usuario> {
     @Override
     public ResponseEntity<?> cadastro(Usuario usuario) {
-        if (biblioteca.buscarUsuario(usuario.username) == null) {
-            biblioteca.criarUsuario(usuario.username, usuario.senha, usuario.contato);
+        if (biblioteca.buscarUsuario(usuario.getUsername()) == null) {
+            biblioteca.criarUsuario(usuario.getUsername(), usuario.getSenha(), usuario.getContato());
             return ResponseEntity.ok("ok");
         } else {
             return ResponseEntity.ok("usuario");
@@ -92,7 +92,7 @@ public class UsuarioImpl implements MainController<Usuario> {
 
     @PostMapping("/logout")
     public ResponseEntity<?> sair(@RequestBody Usuario user) {
-        Usuario usuario = biblioteca.buscarUsuario(user.username);
+        Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
 
         if (usuario != null && !usuario.isCliente()) {
             usuario.baterPontoSaida();
@@ -103,9 +103,9 @@ public class UsuarioImpl implements MainController<Usuario> {
 
     @PostMapping("cadastro-admin")
     public ResponseEntity<?> cadastroAdmin(@RequestBody Usuario usuario) {
-        System.out.println(usuario.username);
-        if (biblioteca.buscarUsuario(usuario.username) == null) {
-            biblioteca.criarAdmin(usuario.username, usuario.senha, usuario.contato);
+        System.out.println(usuario.getUsername());
+        if (biblioteca.buscarUsuario(usuario.getUsername()) == null) {
+            biblioteca.criarAdmin(usuario.getUsername(), usuario.getSenha(), usuario.getContato());
             return ResponseEntity.ok("ok");
         } else {
             return ResponseEntity.ok("usuario");
@@ -124,9 +124,9 @@ public class UsuarioImpl implements MainController<Usuario> {
         for (Livro livro : livrosAlugados) {
             if (livro.isAtrasado()) {
                 LocalDate hoje = LocalDate.now();
-                long atraso = ChronoUnit.DAYS.between(livro.dataDevolucao, hoje);
+                long atraso = ChronoUnit.DAYS.between(livro.getDataDevolucao(), hoje);
 
-                multas.add("Livro: " + livro.getTitulo()+ ",id: " + livro.getId() + ", data devolução: " + livro.dataDevolucao + ", multa de R$: " + (5 + atraso * .75) + " .");
+                multas.add("Livro: " + livro.getTitulo()+ ",id: " + livro.getId() + ", data devolução: " + livro.getDataDevolucao() + ", multa de R$: " + (5 + atraso * .75) + " .");
             }
         }
         return ResponseEntity.ok(multas);

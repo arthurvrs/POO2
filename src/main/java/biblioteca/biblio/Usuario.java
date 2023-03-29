@@ -3,9 +3,9 @@ package biblioteca.biblio;
 import java.util.ArrayList;
 
 public class Usuario {
-    public String username;
-    public String senha;
-    public String contato;
+   private String username;
+   private String senha;
+   private String contato;
     
     public Usuario (String username, String senha, String contato) {
         this.username = username;

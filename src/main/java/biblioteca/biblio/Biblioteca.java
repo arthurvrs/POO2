@@ -103,7 +103,7 @@ public class Biblioteca {
         Livro livro = null;
     
         for (Livro l : this.livros) {
-            if (l.titulo.equals(titulo))
+            if (l.getTitulo().equals(titulo))
                 livro = l;
         }
 
@@ -115,7 +115,7 @@ public class Biblioteca {
         Livro livro = null;
     
         for (Livro l : this.livros) {
-            if (l.id == id)
+            if (l.getId() == id)
                 livro = l;
         }
 
@@ -126,7 +126,7 @@ public class Biblioteca {
         for (Usuario usuario : this.usuarios) {
             if(usuario instanceof Cliente)
             {
-                if (usuario.username.equals(username)) {
+                if (usuario.getUsername().equals(username)) {
                     return usuario;
                 }
             }
@@ -138,7 +138,7 @@ public class Biblioteca {
         for (Usuario admin : this.usuarios) {
             if(admin instanceof Admin)
             {
-                if (admin.username.equals(username)) {
+                if (admin.getUsername().equals(username)) {
                     return admin;
                 }
             }

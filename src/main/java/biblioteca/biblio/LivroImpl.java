@@ -40,7 +40,7 @@ public class LivroImpl implements MainController<Livro> {
                 Usuario usuario = biblioteca.buscarUsuario(livro.getUsername());
 
                 livrosAtrasados.add("Livro: " + livro.getTitulo() + ",id: " + livro.getId() + ", data devolução: "
-                        + livro.dataDevolucao + ", usuario: " + usuario.getUsername() + ", forma de contato: "
+                        + livro.getDataDevolucao() + ", usuario: " + usuario.getUsername() + ", forma de contato: "
                         + usuario.getContato() + ".");
             }
         }
@@ -50,7 +50,7 @@ public class LivroImpl implements MainController<Livro> {
     @PostMapping("/alugar/{id}/{tempo}")
     public ResponseEntity<?> alugarLivro(@PathVariable int id, @PathVariable int tempo, @RequestBody Usuario user) {
 
-        Usuario usuario = biblioteca.buscarUsuario(user.username);
+        Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
 
         if (usuario == null || !usuario.isCliente()) {
             return ResponseEntity.ok("Usuario Invalido");
@@ -68,7 +68,7 @@ public class LivroImpl implements MainController<Livro> {
         if (livro.getDisponibilidade()) {
             usuario.alugarLivro(livro);
             livro.setUsername(usuario.getUsername());
-            livro.dataDevolucao = (LocalDate.now().plusDays(tempo));
+            livro.setDataDevolucao(LocalDate.now().plusDays(tempo));
             return ResponseEntity.ok("ok");
         } else {
             return ResponseEntity.ok("Livro indisponivel!");
@@ -77,7 +77,7 @@ public class LivroImpl implements MainController<Livro> {
 
     @PostMapping("/devolver/{id}")
     public ResponseEntity<?> devolver(@PathVariable int id, @RequestBody Usuario user) {
-        Usuario usuario = biblioteca.buscarUsuario(user.username);
+        Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
         if (usuario == null || !usuario.isCliente()) {
             return ResponseEntity.ok("Usuario Invalido");
         }
@@ -97,7 +97,7 @@ public class LivroImpl implements MainController<Livro> {
 
     @PostMapping("/devolver-atrasado/{id}")
     public ResponseEntity<?> devolverAtrasado(@PathVariable int id, @RequestBody Usuario user) {
-        Usuario usuario = biblioteca.buscarUsuario(user.username);
+        Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
         if (usuario == null || !usuario.isCliente()) {
             return ResponseEntity.ok("Usuario Invalido");
         }
@@ -120,7 +120,7 @@ public class LivroImpl implements MainController<Livro> {
 
     @PostMapping("/reservar/{id}")
     public ResponseEntity<?> fazerReserva(@PathVariable int id, @RequestBody Usuario user) {
-        Usuario usuario = biblioteca.buscarUsuario(user.username);
+        Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
 
         if (usuario == null || !usuario.isCliente()) {
             return ResponseEntity.ok("Usuario Invalido");

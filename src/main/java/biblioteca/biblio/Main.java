@@ -115,7 +115,7 @@ public class Main {
                     alterarContato(admin);
                     break;
                 case "12":
-                    System.out.println(admin.horasTrabalhadas);
+                    System.out.println(admin.getHorasTrabalhadas());
                     break;
                 case "13":
                     admin.baterPontoSaida();
@@ -247,14 +247,14 @@ public class Main {
         
         if(userLogado instanceof Cliente)
         {
-            System.out.println("Usuario " + userLogado.username + " logado com sucesso!");
+            System.out.println("Usuario " + userLogado.getUsername() + " logado com sucesso!");
             cliente = (Cliente) userLogado;
             usuarioMenu();
         }
 
         else if(userLogado instanceof Admin)
         {
-            System.out.println("Usuario " + userLogado.username + " logado com sucesso!");
+            System.out.println("Usuario " + userLogado.getUsername() + " logado com sucesso!");
             admin = (Admin) userLogado;
             admin.baterPontoEntrada();
             adminMenu();
@@ -284,10 +284,10 @@ public class Main {
             return;
         }
 
-        if (livro.dataDevolucao != null) {
+        if (livro.getDataDevolucao() != null) {
             if(livro.isAtrasado()) {
                 LocalDate hoje = LocalDate.now();
-                long atraso = ChronoUnit.DAYS.between(livro.dataDevolucao, hoje);
+                long atraso = ChronoUnit.DAYS.between(livro.getDataDevolucao(), hoje);
                 System.out.println("Digite (ok) para comfirmar o pagamento da multa de R$:" + (5 + atraso*.75) + "\n(R$ 5.00 + R$ 0.75 por dia de atraso.)");
                 String ok = input.nextLine();
             
@@ -309,7 +309,7 @@ public class Main {
             for (Livro livro: cliente.livrosAlugados) {
                 if (livro.isAtrasado()) {
                     LocalDate hoje = LocalDate.now();
-                    long atraso = ChronoUnit.DAYS.between(livro.dataDevolucao, hoje);
+                    long atraso = ChronoUnit.DAYS.between(livro.getDataDevolucao(), hoje);
                     
                     System.out.print("Titulo:");
                     System.out.print(" "+ livro.getTitulo());
@@ -360,7 +360,7 @@ public class Main {
         boolean formatoCorreto = false;
         while (!formatoCorreto) {
             try {
-                livro.dataDevolucao = LocalDate.parse(devolucao, formato);
+                livro.setDataDevolucao(LocalDate.parse(devolucao, formato));
                 formatoCorreto = true;
             } catch (Exception e) {
                 System.out.println("A Input não apresenta o formato correto, digite novamente a data no formato (YYYY-MM-DD)");
@@ -464,7 +464,7 @@ public class Main {
         } else {
             int count = 1;
             for (Livro l: cliente.livrosDevolvidos) {
-                System.out.println(count++ + " - " + l.titulo);
+                System.out.println(count++ + " - " + l.getTitulo());
             }
             System.out.println("Digite o número do livro que quer escrever a review: ");
             int numl = input.nextInt();
@@ -484,7 +484,7 @@ public class Main {
             System.out.println("Digite sua review:");
             String rev = input.nextLine();
             rev = input.nextLine();
-            selecionado.reviews.add(new Review(rev, cliente.username));
+            selecionado.reviews.add(new Review(rev, cliente.getUsername()));
         }       
     }
 
