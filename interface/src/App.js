@@ -21,6 +21,7 @@ import UsuariosAtrasados from "./paginas/UsuariosAtrasados";
 import Busca from "./paginas/Busca";
 import Senha from "./paginas/Senha";
 import Contato from "./paginas/Contato";
+import ListarUsuarios from "./paginas/ListarUsuarios";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path={"/busca/:search"} element={<Busca />} />
           <Route path={"/usuario/alterar-senha"} element={<Senha />} />
           <Route path={"/usuario/alterar-contato"} element={<Contato />} />
+          <Route path={"/usuario/listar-usuarios"} element={<ListarUsuarios />} />
         </Routes>
       </Layout>
     </UserContextProvider>
