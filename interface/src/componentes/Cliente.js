@@ -47,10 +47,10 @@ function Cliente() {
         <div>{UserInfo.type}</div>
       </div>
       <div className={classes.div}>
-        <Link to="usuario/alterar-senha">Mudar Senha</Link>
+        <Link to="/usuario/alterar-senha">Mudar Senha</Link>
       </div>
       <div className={classes.div}>
-        <Link to="usuario/alterar-contato">Atualizar forma de contato</Link>
+        <Link to="/usuario/alterar-contato">Atualizar forma de contato</Link>
       </div>
     </div>
   );
