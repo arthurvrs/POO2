@@ -36,9 +36,8 @@ public class LivroImpl implements MainController<Livro> {
     public ResponseEntity<?> atrasados() {
         ArrayList<String> livrosAtrasados = new ArrayList<>();
         for (Livro livro : biblioteca.livros) {
-            if (livro.isAtrasado()) {
+            if (livro.getUsername() != null && livro.isAtrasado()) {
                 Usuario usuario = biblioteca.buscarUsuario(livro.getUsername());
-
                 livrosAtrasados.add("Livro: " + livro.getTitulo() + ",id: " + livro.getId() + ", data devolução: "
                         + livro.getDataDevolucao() + ", usuario: " + usuario.getUsername() + ", forma de contato: "
                         + usuario.getContato() + ".");

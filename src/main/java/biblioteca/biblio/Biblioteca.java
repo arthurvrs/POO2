@@ -3,27 +3,19 @@ package biblioteca.biblio;
 import java.util.*;
 
 public class Biblioteca {
-    
+
     ArrayList<Usuario> usuarios = new ArrayList<>();
-    ArrayList<Livro> livros = new ArrayList<> ();
-    
-    public Usuario login(String username, String senha)
-    {
-        for(Usuario usuario : usuarios)
-        {
-            if(usuario.getUsername().equals(username) && usuario.getSenha().equals(senha))
-            {
+    ArrayList<Livro> livros = new ArrayList<>();
+
+    public Usuario login(String username, String senha) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getUsername().equals(username) && usuario.getSenha().equals(senha)) {
                 return usuario;
             }
         }
         return null;
     }
 
-    public void inicializarDados() {
-        usuarios.add(new Admin("admin", "admin", "admin@admin.com"));
-        usuarios.add(new Cliente("user", "user", "user@user.com"));
-    }
-    
     public void criarUsuario(String username, String senha, String contato) {
         Cliente novoUsuario = new Cliente(username, senha, contato);
         this.usuarios.add(novoUsuario);
@@ -33,45 +25,43 @@ public class Biblioteca {
         this.livros.add(livro);
     }
 
-    public void listarLivros() {
-        for (Livro livro: livros) {
-            livro.printLivro();
-        }
-    } 
-
-    public void listarClientes( ) {
+    public ArrayList<String> listarUsuarios() {
+        ArrayList<String> listaUsuarios = new ArrayList<>();
         for (Usuario usuario : usuarios) {
-            if(usuario.isCliente())
-            {
-                usuario.printUsuario(usuario);
-            }
+                listaUsuarios.add(usuario.printUsuario(usuario));
+
+
+        }
+        return listaUsuarios;
+    }
+
+    public void listarLivros() {
+        for (Livro livro : livros) {
+            livro.printLivro();
         }
     }
 
     public void listarLivros(int[] count) {
-        
-        for (Usuario usuario: usuarios) {
-            if(usuario.isCliente())
-            {
+
+        for (Usuario usuario : usuarios) {
+            if (usuario.isCliente()) {
                 usuario.ListarLivros(usuario, count);
                 System.out.println();
             }
         }
-        if(count[0] == 0)
-        {
+        if (count[0] == 0) {
             System.out.println("Nenhum Livro Alugado!");
         }
     }
 
     public void listarLivrosAtrasados() {
         int count = 0;
-        for(Livro livro: livros) {
+        for (Livro livro : livros) {
             if (!livro.getDisponibilidade() && livro.isAtrasado()) {
                 livro.printLivro();
 
-                for (Usuario usuario: usuarios) {
-                    if(usuario.isCliente())
-                    {
+                for (Usuario usuario : usuarios) {
+                    if (usuario.isCliente()) {
                         usuario.listarLivrosAtrasados(usuario, livro);
                     }
                 }
@@ -79,7 +69,7 @@ public class Biblioteca {
                 count++;
             }
         }
-        if(count == 0) {
+        if (count == 0) {
             System.out.println("Nenhum Livro Atrasado!");
         }
     }
@@ -90,10 +80,8 @@ public class Biblioteca {
     }
 
     public void listarAdministradores() {
-        for (Usuario usuario : usuarios)
-        {
-            if(!usuario.isCliente())
-            {
+        for (Usuario usuario : usuarios) {
+            if (!usuario.isCliente()) {
                 usuario.printUsuario(usuario);
             }
         }
@@ -101,7 +89,7 @@ public class Biblioteca {
 
     public Livro buscarLivro(String titulo) {
         Livro livro = null;
-    
+
         for (Livro l : this.livros) {
             if (l.getTitulo().equals(titulo))
                 livro = l;
@@ -111,9 +99,9 @@ public class Biblioteca {
     }
 
     public Livro buscarLivroId(int id) {
-       
+
         Livro livro = null;
-    
+
         for (Livro l : this.livros) {
             if (l.getId() == id)
                 livro = l;
@@ -124,8 +112,7 @@ public class Biblioteca {
 
     public Usuario buscarCliente(String username) {
         for (Usuario usuario : this.usuarios) {
-            if(usuario instanceof Cliente)
-            {
+            if (usuario instanceof Cliente) {
                 if (usuario.getUsername().equals(username)) {
                     return usuario;
                 }
@@ -136,8 +123,7 @@ public class Biblioteca {
 
     public Usuario buscarAdmin(String username) {
         for (Usuario admin : this.usuarios) {
-            if(admin instanceof Admin)
-            {
+            if (admin instanceof Admin) {
                 if (admin.getUsername().equals(username)) {
                     return admin;
                 }
@@ -153,5 +139,5 @@ public class Biblioteca {
             usuario = buscarCliente(username);
 
         return usuario;
-    }   
+    }
 }

@@ -27,7 +27,7 @@ public class UsuarioImpl implements MainController<Usuario> {
 
     @Override
     public ResponseEntity<?> listarObjetos() {
-        return ResponseEntity.ok(biblioteca.usuarios);
+        return ResponseEntity.ok(biblioteca.listarUsuarios());
     }
 
     @Override

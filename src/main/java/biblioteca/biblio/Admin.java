@@ -38,10 +38,7 @@ public class Admin extends Usuario {
         horasTrabalhadas += horas;
     }
 
-    public void printUsuario() {
-        System.out.print(getUsername());
-        System.out.print(", Contato: " + getContato());
-        System.out.println(", Horas: " + horasTrabalhadas);
-        // System.out.println("Dia de Pagamen: " + contato);
+    public String printUsuario() {
+        return (getUsername()+ ", Contato: " + getContato() + ", Horas: " + horasTrabalhadas);
     }
 }

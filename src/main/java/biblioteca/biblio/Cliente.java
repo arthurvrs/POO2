@@ -112,8 +112,8 @@ public class Cliente extends Usuario {
     }
 
     @Override
-    public void printUsuario(Usuario usuarios) {
-        System.out.println(listarLivrosAlugados() + "\nContato: " + getContato());
+    public String printUsuario(Usuario usuarios) {
+        return (listarLivrosAlugados() + "\nContato: " + getContato());
     }
 
     public boolean estaComLivroAlugado(Livro livro) {

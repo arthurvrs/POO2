@@ -58,9 +58,8 @@ public class Usuario {
         return false;
     }
 
-    public void printUsuario(Usuario usuario) {
-
-        System.out.println(this.username + "\nContato: " + contato);
+    public String printUsuario(Usuario usuario) {
+        return (this.username + "\nContato: " + contato);
     }
 
     public void ListarLivros(Usuario usuario, int[] count)
