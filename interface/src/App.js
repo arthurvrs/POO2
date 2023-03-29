@@ -19,6 +19,8 @@ import NovaReview from "./paginas/NovaReview";
 import LivrosAtrasados from "./paginas/LivrosAtrasados";
 import UsuariosAtrasados from "./paginas/UsuariosAtrasados";
 import Busca from "./paginas/Busca";
+import Senha from "./paginas/Senha";
+import Contato from "./paginas/Contato";
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
           <Route path={"/livros-atrasados"} element={<LivrosAtrasados />} />
           <Route path={"/usuarios-atrasados"} element={<UsuariosAtrasados />} />
           <Route path={"/busca/:search"} element={<Busca />} />
+          <Route path={"/usuario/alterar-senha"} element={<Senha />} />
+          <Route path={"/usuario/alterar-contato"} element={<Contato />} />
         </Routes>
       </Layout>
     </UserContextProvider>
