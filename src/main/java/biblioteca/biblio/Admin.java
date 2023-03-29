@@ -21,6 +21,10 @@ public class Admin extends Usuario {
         return horasTrabalhadas;
     }
 
+    public LocalDate getDiaPagamento() {
+        return diaPagamento;
+    }
+
     @Override
     public void baterPontoEntrada() {
         horaEntrada = LocalTime.now();

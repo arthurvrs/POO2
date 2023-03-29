@@ -3,8 +3,6 @@ package biblioteca.biblio;
 import java.time.*;
 import java.util.ArrayList;
 
-import org.hibernate.type.descriptor.java.LocalDateJavaType;
-
 public class Livro {
 
     private int id;
@@ -101,6 +99,10 @@ public class Livro {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getCapaUrl() {
+        return capaUrl;
     }
 
     public void setUsername(String username) {

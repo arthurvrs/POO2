@@ -77,9 +77,7 @@ public class UsuarioImpl implements MainController<Usuario> {
         Usuario usuario = biblioteca.login(user.getUsername(), user.getSenha());
 
         if (usuario == null) {
-            System.out.println("Usuario ou senha incorretas");
             return ResponseEntity.ok("nenhum");
-
         }
 
         if (usuario.isCliente()) {
@@ -130,5 +128,31 @@ public class UsuarioImpl implements MainController<Usuario> {
             }
         }
         return ResponseEntity.ok(multas);
+    }
+
+    @PostMapping("/senha/{novaSenha}")
+    public ResponseEntity<?> mudarSenha(@PathVariable String novaSenha, @RequestBody Usuario user) {
+        Usuario usuario = biblioteca.login(user.getUsername(), user.getSenha());
+
+        if (usuario == null) {
+            return ResponseEntity.ok("Usuario ou senha incorretas");
+        }
+
+        usuario.alterarSenha(usuario.getSenha() ,novaSenha);
+        
+        return ResponseEntity.ok("ok");
+    }
+
+    @PostMapping("/contato/{novoContato}")
+    public ResponseEntity<?> mudarContato(@PathVariable String novoContato, @RequestBody Usuario user) {
+        Usuario usuario = biblioteca.login(user.getUsername(), user.getSenha());
+
+        if (usuario == null) {
+            return ResponseEntity.ok("Usuario ou senha incorretas");
+        }
+
+        usuario.alterarContato(user.getSenha(), novoContato);
+        
+        return ResponseEntity.ok("ok");
     }
 }

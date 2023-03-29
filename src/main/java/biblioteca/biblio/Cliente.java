@@ -94,7 +94,7 @@ public class Cliente extends Usuario {
             hoje = hoje.plusDays(14);
             System.out.println(hoje);
             livro.setDataDevolucao(hoje);
-            livro.setUsername(getUsername());
+            livro.setUsername(cliente.getUsername());
             cliente.livrosAlugados.add(livro);
         }
 
