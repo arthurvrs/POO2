@@ -27,8 +27,16 @@ public class LivroImpl implements MainController<Livro> {
 
     @Override
     public ResponseEntity<?> pegarObjeto(String id) {
-
-        int idint = Integer.parseInt(id);
+        int idint = 1;
+        try {
+            idint = Integer.parseInt(id);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+        Livro livro = biblioteca.buscarLivroId(idint);
+        if (livro == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(biblioteca.buscarLivroId(idint));
     }
 
@@ -52,7 +60,7 @@ public class LivroImpl implements MainController<Livro> {
         Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
 
         if (usuario == null || !usuario.isCliente()) {
-            return ResponseEntity.ok("Usuario Invalido");
+            return ResponseEntity.notFound().build();
         }
 
         if (usuario.temLivroAtrasado()) {
@@ -61,7 +69,7 @@ public class LivroImpl implements MainController<Livro> {
         Livro livro = biblioteca.buscarLivroId(id);
 
         if (livro == null) {
-            return ResponseEntity.ok("Livro invalido");
+            return ResponseEntity.notFound().build();
         }
 
         if (livro.getDisponibilidade()) {
@@ -78,7 +86,7 @@ public class LivroImpl implements MainController<Livro> {
     public ResponseEntity<?> devolver(@PathVariable int id, @RequestBody Usuario user) {
         Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
         if (usuario == null || !usuario.isCliente()) {
-            return ResponseEntity.ok("Usuario Invalido");
+            return ResponseEntity.notFound().build();
         }
         Livro livro = biblioteca.buscarLivroId(id);
         if (livro == null) {
@@ -98,7 +106,7 @@ public class LivroImpl implements MainController<Livro> {
     public ResponseEntity<?> devolverAtrasado(@PathVariable int id, @RequestBody Usuario user) {
         Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
         if (usuario == null || !usuario.isCliente()) {
-            return ResponseEntity.ok("Usuario Invalido");
+            return ResponseEntity.notFound().build();
         }
         Livro livro = biblioteca.buscarLivroId(id);
         if (livro == null || !livro.isAtrasado()) {
@@ -122,7 +130,7 @@ public class LivroImpl implements MainController<Livro> {
         Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
 
         if (usuario == null || !usuario.isCliente()) {
-            return ResponseEntity.ok("Usuario Invalido");
+            return ResponseEntity.notFound().build();
         }
 
         if (usuario.temLivroAtrasado()) {

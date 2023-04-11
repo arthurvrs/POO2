@@ -1,14 +1,10 @@
 package biblioteca.biblio;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 public class Admin extends Usuario {
-    double salario;
-
-    private LocalDate diaPagamento;
-
+  
     private LocalTime horaEntrada;
 
     private long horasTrabalhadas;
@@ -21,24 +17,21 @@ public class Admin extends Usuario {
         return horasTrabalhadas;
     }
 
-    public LocalDate getDiaPagamento() {
-        return diaPagamento;
-    }
-
     @Override
     public void baterPontoEntrada() {
         horaEntrada = LocalTime.now();
     }
 
     @Override
-    public void baterPontoSaida() {
+    public void baterPontoSaida() throws NullPointerException{
         LocalTime horaSaida = LocalTime.now();
 
         long horas = ChronoUnit.SECONDS.between(horaEntrada, horaSaida);
         horasTrabalhadas += horas;
     }
 
+    @Override
     public String printUsuario() {
-        return (getUsername()+ ", Contato: " + getContato() + ", Horas: " + horasTrabalhadas);
+        return (getUsername()+ ", Contato: " + getContato() + ", Horas: " + horasTrabalhadas + " (ADMINISTRADOR)");
     }
 }

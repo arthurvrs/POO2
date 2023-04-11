@@ -58,8 +58,8 @@ public class Usuario {
         return false;
     }
 
-    public String printUsuario(Usuario usuario) {
-        return (this.username + "\nContato: " + contato);
+    public String printUsuario() {
+        return null;
     }
 
     public void ListarLivros(Usuario usuario, int[] count)

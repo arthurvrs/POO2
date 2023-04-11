@@ -41,12 +41,12 @@ public class Cliente extends Usuario {
     }
 
     public String listarLivrosAlugados() {
-        StringBuilder buffer = new StringBuilder(getUsername());
-        buffer.append(" -> ");
+        StringBuilder buffer = new StringBuilder(" ");
 
         if (livrosAlugados.isEmpty()) {
             buffer.append("Nenhum livro alugado");
         } else {
+            buffer.append("livros alugados:");
             for (Livro livro : livrosAlugados) {
                 buffer.append("Titulo: ").append(livro.getTitulo());
                 buffer.append(", ");
@@ -54,6 +54,8 @@ public class Cliente extends Usuario {
                 buffer.append(". | ");
             }
         }
+
+        buffer.append(" (CLIENTE)");
 
         return buffer.toString();
     }
@@ -112,8 +114,8 @@ public class Cliente extends Usuario {
     }
 
     @Override
-    public String printUsuario(Usuario usuarios) {
-        return (listarLivrosAlugados() + "\nContato: " + getContato());
+    public String printUsuario() {
+        return ("Usuario: " + getUsername() +"Contato: " + getContato() + listarLivrosAlugados());
     }
 
     public boolean estaComLivroAlugado(Livro livro) {

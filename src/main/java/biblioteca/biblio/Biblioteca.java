@@ -28,9 +28,7 @@ public class Biblioteca {
     public ArrayList<String> listarUsuarios() {
         ArrayList<String> listaUsuarios = new ArrayList<>();
         for (Usuario usuario : usuarios) {
-                listaUsuarios.add(usuario.printUsuario(usuario));
-
-
+            listaUsuarios.add(usuario.printUsuario());
         }
         return listaUsuarios;
     }
@@ -82,7 +80,7 @@ public class Biblioteca {
     public void listarAdministradores() {
         for (Usuario usuario : usuarios) {
             if (!usuario.isCliente()) {
-                usuario.printUsuario(usuario);
+                usuario.printUsuario();
             }
         }
     }

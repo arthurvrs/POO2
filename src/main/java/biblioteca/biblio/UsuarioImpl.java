@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioImpl implements MainController<Usuario> {
     @Override
     public ResponseEntity<?> cadastro(Usuario usuario) {
-        if (biblioteca.buscarUsuario(usuario.getUsername()) == null) {
+        Usuario user = biblioteca.buscarUsuario(usuario.getUsername());
+        if (user == null) {
             biblioteca.criarUsuario(usuario.getUsername(), usuario.getSenha(), usuario.getContato());
             return ResponseEntity.ok("ok");
         } else {
-            return ResponseEntity.ok("usuario");
+            return ResponseEntity.ok("nome de usuario já está em uso");
         }
     }
 
@@ -33,6 +34,9 @@ public class UsuarioImpl implements MainController<Usuario> {
     @Override
     public ResponseEntity<?> pegarObjeto(String id) {
         Usuario usuario = biblioteca.buscarUsuario(id);
+        if (usuario == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(usuario);
     }
 
@@ -52,7 +56,7 @@ public class UsuarioImpl implements MainController<Usuario> {
         Usuario usuario = biblioteca.buscarUsuario(username);
 
         if (usuario == null || !usuario.isCliente()) {
-            return ResponseEntity.ok("usuario invalido");
+            return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(usuario.pegarLivrosAlugados());
@@ -64,7 +68,7 @@ public class UsuarioImpl implements MainController<Usuario> {
         Usuario usuario = biblioteca.buscarUsuario(username);
 
         if (usuario == null || !usuario.isCliente()) {
-            return ResponseEntity.ok("usuario invalido");
+            return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(usuario.pegarLivrosDevolvidos());
@@ -77,7 +81,7 @@ public class UsuarioImpl implements MainController<Usuario> {
         Usuario usuario = biblioteca.login(user.getUsername(), user.getSenha());
 
         if (usuario == null) {
-            return ResponseEntity.ok("nenhum");
+            return ResponseEntity.notFound().build();
         }
 
         if (usuario.isCliente()) {
@@ -93,20 +97,23 @@ public class UsuarioImpl implements MainController<Usuario> {
         Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
 
         if (usuario != null && !usuario.isCliente()) {
-            usuario.baterPontoSaida();
+            try {
+                usuario.baterPontoSaida();
+            } catch (NullPointerException e) {
+                return ResponseEntity.ok("error ao computar horas");
+            }
         }
         return ResponseEntity.ok("ok");
-
     }
 
     @PostMapping("cadastro-admin")
     public ResponseEntity<?> cadastroAdmin(@RequestBody Usuario usuario) {
-        System.out.println(usuario.getUsername());
-        if (biblioteca.buscarUsuario(usuario.getUsername()) == null) {
+        Usuario user = biblioteca.buscarUsuario(usuario.getUsername());
+        if (user == null) {
             biblioteca.criarAdmin(usuario.getUsername(), usuario.getSenha(), usuario.getContato());
             return ResponseEntity.ok("ok");
         } else {
-            return ResponseEntity.ok("usuario");
+            return ResponseEntity.ok("nome de usuario já está em uso");
         }
     }
 
@@ -115,7 +122,7 @@ public class UsuarioImpl implements MainController<Usuario> {
         Usuario usuario = biblioteca.buscarUsuario(username);
         ArrayList<String> multas = new ArrayList<>();
         if (usuario == null || !usuario.isCliente()) {
-            return ResponseEntity.ok(multas);
+            return ResponseEntity.notFound().build();
         }
 
         ArrayList<Livro> livrosAlugados = usuario.pegarLivrosAlugados();
@@ -135,7 +142,7 @@ public class UsuarioImpl implements MainController<Usuario> {
         Usuario usuario = biblioteca.login(user.getUsername(), user.getSenha());
 
         if (usuario == null) {
-            return ResponseEntity.ok("Usuario ou senha incorretas");
+            return ResponseEntity.notFound().build();
         }
 
         usuario.alterarSenha(usuario.getSenha() ,novaSenha);
@@ -148,7 +155,7 @@ public class UsuarioImpl implements MainController<Usuario> {
         Usuario usuario = biblioteca.login(user.getUsername(), user.getSenha());
 
         if (usuario == null) {
-            return ResponseEntity.ok("Usuario ou senha incorretas");
+            return ResponseEntity.notFound().build();
         }
 
         usuario.alterarContato(user.getSenha(), novoContato);
