@@ -34,7 +34,15 @@ public class Cliente extends Usuario {
         if (estaComLivroAlugado(livro)) {
             livrosAlugados.remove(livro);
             livro.mudarDisponibilidade();
-            livrosDevolvidos.add(livro);
+            Boolean flag = true;
+            for(Livro l: livrosDevolvidos){
+                if (l.getId() == livro.getId()) {
+                    flag = false;
+                }
+            }
+            if (flag){
+                livrosDevolvidos.add(livro);
+            }
 
             buscarReserva(livro, biblioteca);
         }

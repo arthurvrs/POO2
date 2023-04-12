@@ -2,11 +2,13 @@ package biblioteca.biblio;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -94,7 +96,7 @@ public class LivroImpl implements MainController<Livro> {
         }
 
         if (livro.isAtrasado()) {
-            return ResponseEntity.ok("Livro atrasado");
+            return ResponseEntity.ok("Livro atrasado, por favor vá para a pagina de multas.");
         }
 
         livro.setUsername(null);
@@ -102,20 +104,22 @@ public class LivroImpl implements MainController<Livro> {
         return ResponseEntity.ok("ok");
     }
 
-    @PostMapping("/devolver-atrasado/{id}")
-    public ResponseEntity<?> devolverAtrasado(@PathVariable int id, @RequestBody Usuario user) {
+    @PostMapping("/devolver-atrasado/")
+    public ResponseEntity<?> devolverAtrasado(@RequestBody Usuario user) {
         Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
         if (usuario == null || !usuario.isCliente()) {
             return ResponseEntity.notFound().build();
         }
-        Livro livro = biblioteca.buscarLivroId(id);
-        if (livro == null || !livro.isAtrasado()) {
-            return ResponseEntity.ok("Livro invalido");
+        List<Livro> livrosAlugados = new ArrayList<>(usuario.pegarLivrosAlugados());
+        for (Livro l : livrosAlugados) {
+            if (l.isAtrasado()) {
+                l.setUsername(null);
+                usuario.devolverLivro(l, biblioteca);
+            }
         }
 
-        livro.setUsername(null);
-        usuario.devolverLivro(livro, biblioteca);
         return ResponseEntity.ok("ok");
+
     }
 
     @PostMapping("/review/{id}")
@@ -141,13 +145,35 @@ public class LivroImpl implements MainController<Livro> {
     }
 
     @GetMapping("busca/{search}")
-    public ResponseEntity<?> busca(@PathVariable String search){
+    public ResponseEntity<?> busca(@PathVariable String search) {
         ArrayList<Livro> livros = new ArrayList<>();
-        for (Livro livro: biblioteca.livros) {
+        for (Livro livro : biblioteca.livros) {
             if (livro.getTitulo().contains(search)) {
                 livros.add(livro);
             }
         }
         return ResponseEntity.ok(livros);
+    }
+
+    @PutMapping("/remover-review/{id}")
+    public ResponseEntity<String> removerReview(@PathVariable int id, @RequestBody Usuario user) {
+        Livro livro = biblioteca.buscarLivroId(id);
+        if (livro == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        int index = -1;
+        for (Review r : livro.reviews) {
+            if (r.reviewerUsername.equals(user.getUsername())) {
+                index = livro.reviews.indexOf(r);
+            }
+        }
+        if (index == -1) {
+            return ResponseEntity.notFound().build();
+        }
+
+        livro.reviews.remove(index);
+        System.out.println("Review removida com sucesso.");
+        return ResponseEntity.ok("Review removida com sucesso.");
     }
 }
