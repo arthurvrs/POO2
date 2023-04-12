@@ -1,10 +1,21 @@
+.maindiv{
+    margin: 25px;
+}
+
 .div{
     width: 100%;
     display: flex;
     flex-wrap: wrap;
     margin-top: 15;
+    justify-content: space-between;
 }
 
-.username {
- margin-left: 10px
-}
+.div button {
+    justify-self: right;
+    background-color: gray;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
