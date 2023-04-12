@@ -43,9 +43,10 @@ public class UsuarioImpl implements MainController<Usuario> {
     @Override
     public ResponseEntity<?> atrasados() {
         ArrayList<String> usuariosAtrasados = new ArrayList<>();
-        for (Usuario usuario: biblioteca.usuarios) {
-            if(usuario.temLivroAtrasado()){
-                usuariosAtrasados.add("Usuario: " + usuario.getUsername() + ", forma de contato: " + usuario.getContato() + ".");
+        for (Usuario usuario : biblioteca.usuarios) {
+            if (usuario.temLivroAtrasado()) {
+                usuariosAtrasados
+                        .add("Usuario: " + usuario.getUsername() + ", forma de contato: " + usuario.getContato() + ".");
             }
         }
         return ResponseEntity.ok(usuariosAtrasados);
@@ -54,12 +55,15 @@ public class UsuarioImpl implements MainController<Usuario> {
     @GetMapping("livrosAlugados/{username}")
     public ResponseEntity<?> getLivrosAlugados(@PathVariable String username) {
         Usuario usuario = biblioteca.buscarUsuario(username);
+        try {
+            if (!usuario.isCliente()) {
+                return ResponseEntity.notFound().build();
+            }
 
-        if (usuario == null || !usuario.isCliente()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(usuario.pegarLivrosAlugados());
+        } catch (Exception e) {
+            return ResponseEntity.ok(usuario.pegarLivrosAlugados());
         }
-
-        return ResponseEntity.ok(usuario.pegarLivrosAlugados());
 
     }
 
@@ -131,7 +135,8 @@ public class UsuarioImpl implements MainController<Usuario> {
                 LocalDate hoje = LocalDate.now();
                 long atraso = ChronoUnit.DAYS.between(livro.getDataDevolucao(), hoje);
 
-                multas.add("Livro: " + livro.getTitulo()+ ",id: " + livro.getId() + ", data devolução: " + livro.getDataDevolucao() + ", multa de R$: " + (5 + atraso * .75) + " .");
+                multas.add("Livro: " + livro.getTitulo() + ",id: " + livro.getId() + ", data devolução: "
+                        + livro.getDataDevolucao() + ", multa de R$: " + (5 + atraso * .75) + " .");
             }
         }
         return ResponseEntity.ok(multas);
@@ -145,8 +150,8 @@ public class UsuarioImpl implements MainController<Usuario> {
             return ResponseEntity.notFound().build();
         }
 
-        usuario.alterarSenha(usuario.getSenha() ,novaSenha);
-        
+        usuario.alterarSenha(usuario.getSenha(), novaSenha);
+
         return ResponseEntity.ok("ok");
     }
 
@@ -159,7 +164,7 @@ public class UsuarioImpl implements MainController<Usuario> {
         }
 
         usuario.alterarContato(user.getSenha(), novoContato);
-        
+
         return ResponseEntity.ok("ok");
     }
 }

@@ -32,14 +32,14 @@ public class LivroImpl implements MainController<Livro> {
         int idint = 1;
         try {
             idint = Integer.parseInt(id);
-        } catch (Exception e) {
+            Livro livro = biblioteca.buscarLivroId(idint);
+            if (livro == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(livro);
+        } catch (NumberFormatException e) {
             return ResponseEntity.notFound().build();
         }
-        Livro livro = biblioteca.buscarLivroId(idint);
-        if (livro == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(biblioteca.buscarLivroId(idint));
     }
 
     @Override
@@ -60,88 +60,98 @@ public class LivroImpl implements MainController<Livro> {
     public ResponseEntity<?> alugarLivro(@PathVariable int id, @PathVariable int tempo, @RequestBody Usuario user) {
 
         Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
-
-        if (usuario == null || !usuario.isCliente()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        if (usuario.temLivroAtrasado()) {
-            return ResponseEntity.ok("Devido a existencia de livros atrasados, esta função está indisponivel!");
-        }
         Livro livro = biblioteca.buscarLivroId(id);
-
-        if (livro == null) {
+        try {
+            if (!usuario.isCliente()) {
+                return ResponseEntity.notFound().build();
+            }
+            if (usuario.temLivroAtrasado()) {
+                return ResponseEntity.ok("Devido a existencia de livros atrasados, esta função está indisponivel!");
+            }
+            if (livro.getDisponibilidade()) {
+                usuario.alugarLivro(livro);
+                livro.setUsername(usuario.getUsername());
+                livro.setDataDevolucao(LocalDate.now().plusDays(tempo));
+                return ResponseEntity.ok("ok");
+            } else {
+                return ResponseEntity.ok("Livro indisponivel!");
+            }
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
-        }
-
-        if (livro.getDisponibilidade()) {
-            usuario.alugarLivro(livro);
-            livro.setUsername(usuario.getUsername());
-            livro.setDataDevolucao(LocalDate.now().plusDays(tempo));
-            return ResponseEntity.ok("ok");
-        } else {
-            return ResponseEntity.ok("Livro indisponivel!");
         }
     }
 
     @PostMapping("/devolver/{id}")
     public ResponseEntity<?> devolver(@PathVariable int id, @RequestBody Usuario user) {
         Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
-        if (usuario == null || !usuario.isCliente()) {
+        Livro livro = biblioteca.buscarLivroId(id);
+
+        try {
+            if (livro.isAtrasado()) {
+                return ResponseEntity.ok("Livro atrasado, por favor vá para a pagina de multas.");
+            }
+
+            livro.setUsername(null);
+            usuario.devolverLivro(livro, biblioteca);
+            return ResponseEntity.ok("ok");
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-        Livro livro = biblioteca.buscarLivroId(id);
-        if (livro == null) {
-            return ResponseEntity.ok("Livro invalido");
-        }
 
-        if (livro.isAtrasado()) {
-            return ResponseEntity.ok("Livro atrasado, por favor vá para a pagina de multas.");
-        }
-
-        livro.setUsername(null);
-        usuario.devolverLivro(livro, biblioteca);
-        return ResponseEntity.ok("ok");
     }
 
     @PostMapping("/devolver-atrasado/")
     public ResponseEntity<?> devolverAtrasado(@RequestBody Usuario user) {
         Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
-        if (usuario == null || !usuario.isCliente()) {
+        try {
+            List<Livro> livrosAlugados = new ArrayList<>(usuario.pegarLivrosAlugados());
+            for (Livro l : livrosAlugados) {
+                if (l.isAtrasado()) {
+                    l.setUsername(null);
+                    usuario.devolverLivro(l, biblioteca);
+                }
+            }
+            return ResponseEntity.ok("ok");
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-        List<Livro> livrosAlugados = new ArrayList<>(usuario.pegarLivrosAlugados());
-        for (Livro l : livrosAlugados) {
-            if (l.isAtrasado()) {
-                l.setUsername(null);
-                usuario.devolverLivro(l, biblioteca);
-            }
-        }
-
-        return ResponseEntity.ok("ok");
-
     }
 
     @PostMapping("/review/{id}")
     public ResponseEntity<?> fazerReview(@PathVariable int id, @RequestBody Review review) {
-        Livro livro = biblioteca.buscarLivroId(id);
-        livro.reviews.add(review);
-        return ResponseEntity.ok("ok");
+        Usuario usuario = biblioteca.buscarUsuario(review.getReviewerUsername());
+
+        try {
+            for (Livro l : usuario.pegarLivrosDevolvidos()) {
+                if (l.getId() == id) {
+                    Livro livro = biblioteca.buscarLivroId(id);
+                    livro.reviews.add(review);
+                    return ResponseEntity.ok("ok");
+                }
+            }
+
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/reservar/{id}")
     public ResponseEntity<?> fazerReserva(@PathVariable int id, @RequestBody Usuario user) {
         Usuario usuario = biblioteca.buscarUsuario(user.getUsername());
 
-        if (usuario == null || !usuario.isCliente()) {
+        try {
+            if (usuario.temLivroAtrasado()) {
+                return ResponseEntity.ok("Devido a existencia de livros atrasados, esta função está indisponivel!");
+            }
+            Livro livro = biblioteca.buscarLivroId(id);
+            if (livro.getDisponibilidade()) {
+                return ResponseEntity.ok("O livro está disponivel!");
+            }
+            return ResponseEntity.ok(usuario.reservar(livro));
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-
-        if (usuario.temLivroAtrasado()) {
-            return ResponseEntity.ok("Devido a existencia de livros atrasados, esta função está indisponivel!");
-        }
-        Livro livro = biblioteca.buscarLivroId(id);
-        return ResponseEntity.ok(usuario.reservar(livro));
     }
 
     @GetMapping("busca/{search}")
@@ -158,22 +168,23 @@ public class LivroImpl implements MainController<Livro> {
     @PutMapping("/remover-review/{id}")
     public ResponseEntity<String> removerReview(@PathVariable int id, @RequestBody Usuario user) {
         Livro livro = biblioteca.buscarLivroId(id);
-        if (livro == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        int index = -1;
-        for (Review r : livro.reviews) {
-            if (r.reviewerUsername.equals(user.getUsername())) {
-                index = livro.reviews.indexOf(r);
+        try {
+            int index = -1;
+            for (Review r : livro.reviews) {
+                if (r.getReviewerUsername().equals(user.getUsername())) {
+                    index = livro.reviews.indexOf(r);
+                }
             }
-        }
-        if (index == -1) {
+            if (index == -1) {
+                return ResponseEntity.notFound().build();
+            }
+
+            livro.reviews.remove(index);
+            System.out.println("Review removida com sucesso.");
+            return ResponseEntity.ok("Review removida com sucesso.");
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
 
-        livro.reviews.remove(index);
-        System.out.println("Review removida com sucesso.");
-        return ResponseEntity.ok("Review removida com sucesso.");
     }
 }

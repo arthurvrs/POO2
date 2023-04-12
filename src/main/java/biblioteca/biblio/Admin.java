@@ -23,7 +23,7 @@ public class Admin extends Usuario {
     }
 
     @Override
-    public void baterPontoSaida() throws NullPointerException{
+    public void baterPontoSaida() {
         LocalTime horaSaida = LocalTime.now();
 
         long horas = ChronoUnit.SECONDS.between(horaEntrada, horaSaida);
