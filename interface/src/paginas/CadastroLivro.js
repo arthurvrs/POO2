@@ -1,8 +1,9 @@
 import axios from "axios";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import classes from "../layout/input.module.css";
+import ErrorMessage from "../componentes/ErrorMessage";
 
 function CadastroLivro() {
   const tituloInputRef = useRef();
@@ -13,6 +14,7 @@ function CadastroLivro() {
   const sinopseInputRef = useRef();
 
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("ok");
 
   const SubmitHandler = (event) => {
     event.preventDefault();
@@ -23,7 +25,16 @@ function CadastroLivro() {
     const anoLanData = anoLanInputRef.current.value;
     const capaUrlData = capaUrlInputRef.current.value;
     const sinopseData = sinopseInputRef.current.value;
-
+    if (
+      tituloData === "" ||
+      autorData === "" ||
+      editoraData === "" ||
+      anoLanData === "" ||
+      capaUrlData === "" ||
+      sinopseData === ""
+    ) {
+      setErrorMessage("Campo não preenchido");
+    } else {
       const livro = {
         titulo: tituloData,
         autor: autorData,
@@ -31,20 +42,20 @@ function CadastroLivro() {
         ano: anoLanData,
         capaUrl: capaUrlData,
         sinopseData: sinopseData,
-      }
+      };
 
       axios
-      .post("http://localhost:8080/livro/cadastro", livro)
-      .then ((response) => {
-        if(response.data === "ok") {
-          navigate("/", { replace: true });
-      }})
-      .catch ((error) => {
-        console.log(error);
-      })
+        .post("http://localhost:8080/livro/cadastro", livro)
+        .then((response) => {
+          if (response.data === "ok") {
+            navigate("/", { replace: true });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-  
-
+  };
 
   return (
     <card>
@@ -72,11 +83,18 @@ function CadastroLivro() {
         </div>
         <div className={classes.div}>
           <label htmlFor="title">Sinopse:</label>
-          <textarea required rows='6' ref={sinopseInputRef} />
+          <textarea required rows="6" ref={sinopseInputRef} />
         </div>
+        {errorMessage !== "ok" ? (
+            <ErrorMessage>{errorMessage}</ErrorMessage>
+          ) : (
+            <div />
+          )}
         <div className={classes.div}>
           <button type="submit">Confirmar</button>
-          <Link to="/"><button>Cancelar</button></Link>
+          <Link to="/">
+            <button>Cancelar</button>
+          </Link>
         </div>
       </form>
     </card>

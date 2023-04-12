@@ -1,11 +1,14 @@
 import axios from "axios";
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import classes from "../layout/input.module.css";
 import UserContext from "../user-context";
+import ErrorMessage from "../componentes/ErrorMessage";
 
 function CadastroAdmin() {
+  const [errorMessage, setErrorMessage] = useState("ok");
+
   const usernameInputRef = useRef();
   const password1InputRef = useRef();
   const password2InputRef = useRef();
@@ -14,7 +17,9 @@ function CadastroAdmin() {
   const navigate = useNavigate();
   const UserInfo = useContext(UserContext);
 
-  if (UserInfo.type === "admin") {
+  if (UserInfo.type !== "admin") {
+    navigate("/", { replace: true });
+  } else {
     const SubmitHandler = (event) => {
       event.preventDefault();
 
@@ -23,7 +28,16 @@ function CadastroAdmin() {
       const password1Data = password1InputRef.current.value;
       const password2Data = password2InputRef.current.value;
 
-      if (password1Data === password2Data) {
+      if (
+        usernameData === "" ||
+        contatoData === "" ||
+        password1Data === "" ||
+        password2Data === ""
+      ) {
+        setErrorMessage("Campo não preenchido");
+      } else if (password1Data !== password2Data) {
+        setErrorMessage("Senhas diferentes");
+      } else {
         const usuario = {
           username: usernameData,
           senha: password1Data,
@@ -36,7 +50,8 @@ function CadastroAdmin() {
             if (response.data === "ok") {
               navigate("/", { replace: true });
             } else {
-              console.log("nome de usuario já existe");
+              console.log("Nome de usuario já existe");
+              setErrorMessage("Nome de usuario já existe");
             }
           })
           .catch((error) => {
@@ -61,12 +76,17 @@ function CadastroAdmin() {
           </div>
           <div className={classes.div}>
             <label htmlFor="title">Senha:</label>
-            <input type="text" ref={password1InputRef} />
+            <input type="password" ref={password1InputRef} />
           </div>
           <div className={classes.div}>
             <label htmlFor="title">Confirmar Senha:</label>
-            <input type="text" ref={password2InputRef} />
+            <input type="password" ref={password2InputRef} />
           </div>
+          {errorMessage !== "ok" ? (
+            <ErrorMessage>{errorMessage}</ErrorMessage>
+          ) : (
+            <div />
+          )}
           <div className={classes.div}>
             <button type="submit">Confirmar</button>
             <Link to="/">

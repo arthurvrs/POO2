@@ -3,12 +3,15 @@ import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import classes from "./LivroDetalhes.module.css";
 import UserContext from "../user-context";
+import ErrorMessage from "../componentes/ErrorMessage";
 
 function Alugar() {
   const UserInfo = useContext(UserContext);
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("ok");
   const [livro, setLivro] = useState([]);
   const tempoInputRef = useRef();
 
@@ -20,6 +23,10 @@ function Alugar() {
         console.log(response.data);
         return response.data;
       })
+      .catch((error) => {
+        console.log(error);
+        setNotFound(true);
+      })
       .then((data) => {
         setIsLoading(false);
         setLivro(data);
@@ -28,6 +35,10 @@ function Alugar() {
 
   const SubmitHandler = (event) => {
     event.preventDefault();
+    if (UserInfo.type !== "user") {
+      setErrorMessage("Usuario Inválido");
+      return;
+    }
     const user = {
       username: UserInfo.username,
     };
@@ -37,11 +48,12 @@ function Alugar() {
       .then((response) => {
         console.log(response.data);
         if (response.data === "ok") {
-          navigate("/",{replace: true})
+          navigate("/", { replace: true });
         }
       })
       .catch((error) => {
         console.log(error);
+        setErrorMessage("Data invalida");
       });
   };
 
@@ -51,6 +63,10 @@ function Alugar() {
         <p>Loading...</p>
       </section>
     );
+  }
+
+  if (notFound) {
+    return <ErrorMessage>Livro não encontrado</ErrorMessage>;
   }
 
   return (
@@ -78,6 +94,11 @@ function Alugar() {
           <div className={classes.basicinfo}>
             <label htmlFor="title">Tempo (dias) :</label>
             <input type="text" ref={tempoInputRef} />
+            {errorMessage !== "ok" ? (
+              <ErrorMessage>{errorMessage}</ErrorMessage>
+            ) : (
+              <div />
+            )}
             <button type="submit">Alugar</button>
           </div>
         </form>

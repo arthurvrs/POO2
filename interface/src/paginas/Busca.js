@@ -30,6 +30,13 @@ function Busca() {
     );
   }
 
+  if (listaLivros.length === 0) {
+    return (
+      <section>
+        <p>Nenhum livro encontrado</p>
+      </section>
+    );
+  }
   return (
     <section>
       <div>Livros</div>

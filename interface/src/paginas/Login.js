@@ -1,14 +1,16 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import axios from "axios";
 
 import classes from "../layout/input.module.css";
 import UserContext from "../user-context";
 import { Link, useNavigate } from "react-router-dom";
+import ErrorMessage from "../componentes/ErrorMessage";
 
 function Login() {
   const usernameInputRef = useRef();
   const passwordInputRef = useRef();
 
+  const [loginFail, setLoginFail] = useState(false);
   const UserInfo = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -24,17 +26,12 @@ function Login() {
     axios
       .post("http://localhost:8080/usuario/login", usuario)
       .then((response) => {
-        if (response.data !== "nenhum") {
-          console.log(usernameData, response.data);
-          UserInfo.login(usernameData, response.data);
-          navigate("/", { replace: true });
-        } else {
-          console.log("Usuario ou senha invalidos");
-        }
-
+        console.log(usernameData, response.data);
+        UserInfo.login(usernameData, response.data);
+        navigate("/", { replace: true });
       })
       .catch((error) => {
-        console.log(error);
+        setLoginFail(true);
       });
   };
 
@@ -50,6 +47,7 @@ function Login() {
           <label htmlFor="title">Senha:</label>
           <input type="password" ref={passwordInputRef} />
         </div>
+        {loginFail ? (<ErrorMessage>Usuario ou Senha incorretos</ErrorMessage>) : <div></div>}
         <div className={classes.div}>
           <button type="submit">Confirmar</button>
           <Link to="/">

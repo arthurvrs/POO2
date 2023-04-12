@@ -4,12 +4,15 @@ import axios from "axios";
 import classes from "./LivroDetalhes.module.css";
 import UserContext from "../user-context";
 import ListaReviews from "../componentes/ListarReviews";
+import ErrorMessage from "../componentes/ErrorMessage";
 
 function LivroDetalhes() {
   const { id } = useParams();
   const UserInfo = useContext(UserContext);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("ok");
   const [livro, setLivro] = useState([]);
 
   useEffect(() => {
@@ -20,13 +23,17 @@ function LivroDetalhes() {
         console.log(response.data);
         return response.data;
       })
+      .catch((error) => {
+        console.log(error);
+        setNotFound(true);
+      })
       .then((data) => {
         setIsLoading(false);
         setLivro(data);
       });
   }, []);
 
-  const devolver = (event)  => {
+  const devolver = (event) => {
     event.preventDefault();
     const user = {
       username: UserInfo.username,
@@ -36,7 +43,9 @@ function LivroDetalhes() {
       .then((response) => {
         console.log(response.data);
         if (response.data === "ok") {
-          navigate("/",{replace: true})
+          navigate("/", { replace: true });
+        } else {
+          setErrorMessage(response.data);
         }
       })
       .catch((error) => {
@@ -54,13 +63,13 @@ function LivroDetalhes() {
       .then((response) => {
         console.log(response.data);
         if (response.data === "ok") {
-          navigate("/",{replace: true})
+          navigate("/", { replace: true });
         }
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   if (isLoading) {
     return (
@@ -68,6 +77,10 @@ function LivroDetalhes() {
         <p>Loading...</p>
       </section>
     );
+  }
+
+  if (notFound) {
+    return <ErrorMessage>Livro não encontrado</ErrorMessage>;
   }
 
   return (
@@ -86,14 +99,19 @@ function LivroDetalhes() {
           </div>
           <div className={classes.basicinfo}>
             <div>Ano de lançameto:</div>
-            <div>{livro.autor}</div>
+            <div>{livro.ano}</div>
           </div>
         </div>
       </div>
       <div className={classes.div}>
         <div>Sinopse:</div>
-        <div>{livro.sinopse}</div>
+        <div className={classes.sinopse}>{livro.sinopse}</div>
       </div>
+      {errorMessage !== "ok" ? (
+        <ErrorMessage>{errorMessage}</ErrorMessage>
+      ) : (
+        <div />
+      )}
       <div className={classes.div}>
         {UserInfo.username === livro.username ? (
           <button onClick={devolver}>Devolver</button>
@@ -112,7 +130,7 @@ function LivroDetalhes() {
         )}
       </div>
       <div className={classes.div}>Reviews:</div>
-      <ListaReviews reviews={livro.reviews}/>
+      <ListaReviews reviews={livro.reviews} />
     </div>
   );
 }
