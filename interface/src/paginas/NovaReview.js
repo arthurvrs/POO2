@@ -1,15 +1,17 @@
 import axios from "axios";
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import UserContext from "../user-context";
 import classes from "../layout/input.module.css";
+import ErrorMessage from "../componentes/ErrorMessage";
 
 function CadastroLivro() {
   const UserInfo = useContext(UserContext);
   const reviewInputRef = useRef();
   const { id } = useParams();
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("ok");
 
   const SubmitHandler = (event) => {
     event.preventDefault();
@@ -30,6 +32,7 @@ function CadastroLivro() {
       })
       .catch((error) => {
         console.log(error);
+        setErrorMessage("Usuario inválido");
       });
   };
 
@@ -41,6 +44,11 @@ function CadastroLivro() {
           <label htmlFor="title">Review :</label>
           <textarea required rows="6" ref={reviewInputRef} />
         </div>
+        {errorMessage !== "ok" ? (
+          <ErrorMessage>{errorMessage}</ErrorMessage>
+        ) : (
+          <div />
+        )}
         <div className={classes.div}>
           <button type="submit">Confirmar</button>
           <Link to="/">

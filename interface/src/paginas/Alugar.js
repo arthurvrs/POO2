@@ -49,6 +49,8 @@ function Alugar() {
         console.log(response.data);
         if (response.data === "ok") {
           navigate("/", { replace: true });
+        } else {
+          setErrorMessage(response.data);
         }
       })
       .catch((error) => {
