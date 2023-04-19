@@ -1,0 +1,38 @@
+Duplicated Code
+
+  Biblioteca -> listarlivros, listarLivrosAtrasados, buscarCliente, BuscarAdmin.
+
+Data Clumps
+
+  Usuario -> (livrosAlugados, LivrosReservados, LivrosDevolvidos), (printUsuario, listarLivrosAlugados)
+
+Long Method
+
+  Cliente -> removerReserva
+  Biblioteca -> listarLivrosAtrasados
+
+Large Class
+
+  Livro, Biblioteca
+
+Shotgun Surgery
+
+  Biblioteca
+
+Feature Envy
+
+  Cliente -> removerReserva, reservar.
+
+Primitive Obsession
+
+  Livro -> CapaURL, id.
+
+Middle Man
+
+  Usuario ->  printUsuario, ListarLivros, listarLivrosAtrasados, temLivroAtrasado, 
+              baterPontoEntrada, baterPontoSaida, alugarLivro, pegarLivrosAlugados,
+              pegarLivrosDevolvidos, devolverLivro e reservarlistar.
+
+Data Class
+
+  Reviews
